@@ -6,7 +6,7 @@ export interface ConfirmModalProps {
   message: string;
   confirmLabel?: string;
   cancelLabel?: string;
-  variant?: 'default' | 'danger';
+  variant?: 'default' | 'danger' | 'warning';
   onConfirm: () => void;
   onCancel: () => void;
 }
@@ -27,6 +27,7 @@ export function ConfirmModal({
 }: ConfirmModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
   const cancelButtonRef = useRef<HTMLButtonElement>(null);
+  const confirmButtonRef = useRef<HTMLButtonElement>(null);
 
   // Focus trap and keyboard handling
   useEffect(() => {
@@ -38,6 +39,28 @@ export function ConfirmModal({
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         onCancel();
+        return;
+      }
+
+      // Focus trap - cycle between cancel and confirm buttons
+      if (e.key === 'Tab') {
+        const focusableElements = [cancelButtonRef.current, confirmButtonRef.current].filter(Boolean);
+        const firstElement = focusableElements[0];
+        const lastElement = focusableElements[focusableElements.length - 1];
+
+        if (e.shiftKey) {
+          // Shift+Tab: if on first element, go to last
+          if (document.activeElement === firstElement) {
+            e.preventDefault();
+            lastElement?.focus();
+          }
+        } else {
+          // Tab: if on last element, go to first
+          if (document.activeElement === lastElement) {
+            e.preventDefault();
+            firstElement?.focus();
+          }
+        }
       }
     };
 
@@ -90,7 +113,8 @@ export function ConfirmModal({
             {cancelLabel}
           </button>
           <button
-            className={`btn ${variant === 'danger' ? 'btn-danger' : 'btn-primary'}`}
+            ref={confirmButtonRef}
+            className={`btn ${variant === 'danger' ? 'btn-danger' : variant === 'warning' ? 'btn-warning' : 'btn-primary'}`}
             onClick={onConfirm}
           >
             {confirmLabel}
@@ -130,6 +154,77 @@ export function DeleteSessionModal({
       confirmLabel="Excluir"
       cancelLabel="Cancelar"
       variant="danger"
+      onConfirm={onConfirm}
+      onCancel={onCancel}
+    />
+  );
+}
+
+export interface DeleteTagModalProps {
+  isOpen: boolean;
+  tagName: string;
+  sessionCount: number;
+  onConfirm: () => void;
+  onCancel: () => void;
+}
+
+/**
+ * Modal específico para exclusão de tags
+ * Mostra nome da tag e quantidade de sessões associadas
+ */
+export function DeleteTagModal({
+  isOpen,
+  tagName,
+  sessionCount,
+  onConfirm,
+  onCancel,
+}: DeleteTagModalProps) {
+  const sessionText = sessionCount === 1 ? 'sessão associada' : 'sessões associadas';
+
+  return (
+    <ConfirmModal
+      isOpen={isOpen}
+      title="Excluir tag?"
+      message={`A tag "${tagName}" possui ${sessionCount} ${sessionText}. A tag será removida de todas as sessões. Esta ação não pode ser desfeita.`}
+      confirmLabel="Excluir"
+      cancelLabel="Cancelar"
+      variant="danger"
+      onConfirm={onConfirm}
+      onCancel={onCancel}
+    />
+  );
+}
+
+export interface ImportReplaceModalProps {
+  isOpen: boolean;
+  existingCount: number;
+  importingCount: number;
+  onConfirm: () => void;
+  onCancel: () => void;
+}
+
+/**
+ * Modal de confirmação para substituição durante importação
+ * Alerta sobre perda de sessões existentes
+ */
+export function ImportReplaceModal({
+  isOpen,
+  existingCount,
+  importingCount,
+  onConfirm,
+  onCancel,
+}: ImportReplaceModalProps) {
+  const existingText = existingCount === 1 ? 'sessão existente será substituída' : 'sessões existentes serão substituídas';
+  const importingText = importingCount === 1 ? 'sessão do arquivo' : 'sessões do arquivo';
+
+  return (
+    <ConfirmModal
+      isOpen={isOpen}
+      title="Substituir todas as sessões?"
+      message={`${existingCount} ${existingText} por ${importingCount} ${importingText}. Todas as sessões atuais serão permanentemente perdidas.`}
+      confirmLabel="Substituir"
+      cancelLabel="Cancelar"
+      variant="warning"
       onConfirm={onConfirm}
       onCancel={onCancel}
     />

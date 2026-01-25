@@ -1,0 +1,232 @@
+import { useState, useEffect, useRef, useCallback } from 'react';
+import type { Tag } from '../../storage';
+
+export interface SearchFilterBarProps {
+  readonly tags: readonly Tag[];
+  readonly totalSessions: number;
+  readonly filteredCount: number;
+  readonly onSearchChange: (searchTerm: string) => void;
+  readonly onTagsChange: (selectedTags: string[]) => void;
+  readonly selectedTags: readonly string[];
+  readonly searchTerm: string;
+}
+
+/**
+ * Custom hook for debounced value
+ */
+function useDebounce<T>(value: T, delay: number): T {
+  const [debouncedValue, setDebouncedValue] = useState<T>(value);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
+}
+
+export function SearchFilterBar({
+  tags,
+  totalSessions,
+  filteredCount,
+  onSearchChange,
+  onTagsChange,
+  selectedTags,
+  searchTerm,
+}: SearchFilterBarProps) {
+  const [localSearchTerm, setLocalSearchTerm] = useState(searchTerm);
+  const [isTagDropdownOpen, setIsTagDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  // Debounce the search term (300ms as per spec)
+  const debouncedSearchTerm = useDebounce(localSearchTerm, 300);
+
+  // Sync local search term with prop when it changes externally
+  useEffect(() => {
+    setLocalSearchTerm(searchTerm);
+  }, [searchTerm]);
+
+  // Emit debounced search term to parent
+  useEffect(() => {
+    onSearchChange(debouncedSearchTerm);
+  }, [debouncedSearchTerm, onSearchChange]);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsTagDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleSearchInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setLocalSearchTerm(e.target.value);
+  };
+
+  const handleTagToggle = useCallback((tagName: string) => {
+    const newTags = selectedTags.includes(tagName)
+      ? selectedTags.filter(t => t !== tagName)
+      : [...selectedTags, tagName];
+    onTagsChange(newTags);
+  }, [selectedTags, onTagsChange]);
+
+  // Keyboard navigation for tag dropdown
+  const handleDropdownKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      setIsTagDropdownOpen(false);
+    }
+  }, []);
+
+  const handleClearAll = () => {
+    setLocalSearchTerm('');
+    onSearchChange('');
+    onTagsChange([]);
+    inputRef.current?.focus();
+  };
+
+  const hasActiveFilters = localSearchTerm.length > 0 || selectedTags.length > 0;
+  const isFiltered = filteredCount !== totalSessions;
+
+  // Results counter text
+  const getResultsText = () => {
+    if (totalSessions === 0) {
+      return '0 sessões';
+    }
+    if (isFiltered) {
+      return `${filteredCount} de ${totalSessions} sessões`;
+    }
+    return `${totalSessions} ${totalSessions === 1 ? 'sessão' : 'sessões'}`;
+  };
+
+  return (
+    <div className="search-filter-bar">
+      {/* Search Input */}
+      <div className="search-input-wrapper">
+        <span className="search-icon" aria-hidden="true">🔍</span>
+        <input
+          ref={inputRef}
+          type="text"
+          className="input search-input"
+          placeholder="Buscar sessões..."
+          value={localSearchTerm}
+          onChange={handleSearchInput}
+          aria-label="Buscar sessões"
+        />
+        {hasActiveFilters && (
+          <button
+            className="btn btn-icon btn-sm search-clear-btn"
+            onClick={handleClearAll}
+            aria-label="Limpar busca e filtros"
+            title="Limpar"
+          >
+            ✕
+          </button>
+        )}
+      </div>
+
+      {/* Tag Filter */}
+      {tags.length > 0 && (
+        <div className="tag-filter-wrapper" ref={dropdownRef} onKeyDown={handleDropdownKeyDown}>
+          <button
+            className={`btn btn-secondary tag-filter-btn ${selectedTags.length > 0 ? 'has-selection' : ''}`}
+            onClick={() => setIsTagDropdownOpen(!isTagDropdownOpen)}
+            aria-expanded={isTagDropdownOpen}
+            aria-haspopup="listbox"
+          >
+            🏷️ Tags
+            {selectedTags.length > 0 && (
+              <span className="tag-filter-count">{selectedTags.length}</span>
+            )}
+          </button>
+
+          {isTagDropdownOpen && (
+            <div className="tag-filter-dropdown" role="listbox" aria-label="Filtrar por tags">
+              {tags.map((tag) => {
+                const isSelected = selectedTags.includes(tag.name);
+                return (
+                  <button
+                    key={tag.id}
+                    className={`tag-filter-option ${isSelected ? 'selected' : ''}`}
+                    onClick={() => handleTagToggle(tag.name)}
+                    role="option"
+                    aria-selected={isSelected}
+                  >
+                    <span
+                      className="tag-filter-color"
+                      style={{ backgroundColor: tag.color || '#9E9E9E' }}
+                    />
+                    <span className="tag-filter-name">{tag.name}</span>
+                    {isSelected && <span className="tag-filter-check">✓</span>}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Selected Tags Chips */}
+      {selectedTags.length > 0 && (
+        <div className="selected-tags">
+          {selectedTags.map((tagName) => {
+            const tag = tags.find(t => t.name === tagName);
+            return (
+              <button
+                key={tagName}
+                className="selected-tag-chip"
+                onClick={() => handleTagToggle(tagName)}
+                aria-label={`Remover filtro ${tagName}`}
+                style={{
+                  borderColor: tag?.color || '#9E9E9E',
+                  backgroundColor: `${tag?.color || '#9E9E9E'}20`,
+                }}
+              >
+                <span
+                  className="selected-tag-dot"
+                  style={{ backgroundColor: tag?.color || '#9E9E9E' }}
+                />
+                {tagName}
+                <span className="selected-tag-remove">✕</span>
+              </button>
+            );
+          })}
+        </div>
+      )}
+
+      {/* Results Counter */}
+      <div className="search-results-counter">
+        <span className="text-caption text-muted">{getResultsText()}</span>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Empty search state component
+ */
+export function SearchEmptyState({ onClear }: { onClear: () => void }) {
+  return (
+    <div className="search-empty-state">
+      <div className="empty-illustration">🔍</div>
+      <h3 className="text-body" style={{ fontWeight: 500 }}>
+        Nenhuma sessão encontrada
+      </h3>
+      <p className="text-body-sm text-muted">
+        Tente ajustar os termos de busca ou filtros
+      </p>
+      <button className="btn btn-secondary" onClick={onClear}>
+        Limpar Filtros
+      </button>
+    </div>
+  );
+}

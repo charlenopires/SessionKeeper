@@ -18,5 +18,6 @@
     "types": ["chrome"]
   },
   "include": ["src"],
+  "exclude": ["src/**/*.test.ts", "src/**/*.test.tsx", "src/test-setup.ts", "src/storage/transaction-examples.ts"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

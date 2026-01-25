@@ -38,19 +38,19 @@ export interface CaptureResult {
  * Tab data for storage (without runtime-only fields)
  */
 export interface StoredTab {
-  readonly url: string;
-  readonly title: string;
-  readonly favIconUrl: string | undefined;
-  readonly index: number;
-  readonly pinned: boolean;
+  url: string;
+  title: string;
+  favIconUrl?: string;
+  index: number;
+  pinned: boolean;
 }
 
 /**
  * Window snapshot for storage
  */
 export interface StoredWindowSnapshot {
-  readonly windowId: number;
-  readonly tabs: readonly StoredTab[];
+  windowId: number;
+  tabs: StoredTab[];
 }
 
 /**

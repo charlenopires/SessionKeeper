@@ -55,8 +55,16 @@ export function Toast({ toast, onDismiss }: ToastProps) {
     return () => clearTimeout(timer);
   }, [toast.id, toast.duration, onDismiss]);
 
+  const handleDismiss = () => {
+    setIsLeaving(true);
+    setTimeout(() => onDismiss(toast.id), 300);
+  };
+
   return (
     <div
+      className="toast"
+      role="alert"
+      aria-live="polite"
       style={{
         ...toastStyles[toast.type],
         padding: 'var(--spacing-md)',
@@ -69,11 +77,6 @@ export function Toast({ toast, onDismiss }: ToastProps) {
         transform: isVisible && !isLeaving ? 'translateY(0)' : 'translateY(-20px)',
         opacity: isVisible && !isLeaving ? 1 : 0,
         transition: 'transform 0.3s ease, opacity 0.3s ease',
-        cursor: 'pointer',
-      }}
-      onClick={() => {
-        setIsLeaving(true);
-        setTimeout(() => onDismiss(toast.id), 300);
       }}
     >
       <span style={{ fontSize: '18px', lineHeight: 1 }}>{icons[toast.type]}</span>
@@ -85,6 +88,25 @@ export function Toast({ toast, onDismiss }: ToastProps) {
           <div style={{ fontSize: '13px', opacity: 0.9 }}>{toast.message}</div>
         )}
       </div>
+      <button
+        type="button"
+        onClick={handleDismiss}
+        aria-label="Fechar notificação"
+        style={{
+          background: 'transparent',
+          border: 'none',
+          color: 'white',
+          cursor: 'pointer',
+          padding: '2px',
+          fontSize: '16px',
+          lineHeight: 1,
+          opacity: 0.8,
+        }}
+        onMouseEnter={(e) => { e.currentTarget.style.opacity = '1'; }}
+        onMouseLeave={(e) => { e.currentTarget.style.opacity = '0.8'; }}
+      >
+        ✕
+      </button>
     </div>
   );
 }
@@ -97,16 +119,17 @@ interface ToastContainerProps {
 export function ToastContainer({ toasts, onDismiss }: ToastContainerProps) {
   return (
     <div
+      className="toast-container"
       style={{
         position: 'fixed',
         top: 'var(--spacing-md)',
-        left: 'var(--spacing-md)',
         right: 'var(--spacing-md)',
         display: 'flex',
         flexDirection: 'column',
         gap: 'var(--spacing-sm)',
         zIndex: 1000,
         pointerEvents: 'none',
+        maxWidth: '320px',
       }}
     >
       {toasts.map((toast) => (

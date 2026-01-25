@@ -1,26 +1,110 @@
-import { useState } from 'react';
+import { useState, useMemo, useCallback, useEffect } from 'react';
 import { ToastContainer, useToast } from './components/Toast';
-import { captureAllTabs } from '../session-management';
-import { createSession, initializeDatabase } from '../storage';
+import { SessionList } from './components/SessionList';
+import { QuickActionsBar } from './components/QuickActionsBar';
+import { SaveSessionModal, type SaveSessionData } from './components/SaveSessionModal';
+import { EditSessionModal, type EditSessionData } from './components/EditSessionModal';
+import { RestoreOptionsModal, type RestoreTarget } from './components/RestoreOptionsModal';
+import { TagManagementPanel, type TagWithCount } from './components/TagManagementPanel';
+import { SearchFilterBar, SearchEmptyState } from './components/SearchFilterBar';
+import { DeleteSessionModal } from './components/ConfirmModal';
+import { useSessions } from './hooks';
+import {
+  captureAllTabs,
+  detectDuplicates,
+  filterByStrategy,
+  restoreToNewWindows,
+  restoreToCurrentWindow,
+  type WindowSnapshot,
+  type RestoreProgress,
+  type DuplicateDetectionResult,
+} from '../session-management';
+import { createSession, createTag, getAllTags, initializeDatabase, updateTag, deleteTag, deleteSession } from '../storage';
+import { getDatabase } from '../storage/db';
+import { exportSessions, importSessions } from '../import-export';
 import { isOk } from '../storage/result';
-import type { StoredWindowSnapshot } from '../storage';
+import type { StoredWindowSnapshot, Session, Tag } from '../storage';
 
 export function App() {
-  const [sessionName, setSessionName] = useState('');
-  const [description, setDescription] = useState('');
   const [isSaving, setIsSaving] = useState(false);
-  const { toasts, dismissToast, showSessionSaved, showError } = useToast();
+  const [isExporting, setIsExporting] = useState(false);
+  const [isImporting, setIsImporting] = useState(false);
+  const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isRestoreModalOpen, setIsRestoreModalOpen] = useState(false);
+  const [isRestoring, setIsRestoring] = useState(false);
+  const [isTagPanelOpen, setIsTagPanelOpen] = useState(false);
+  const [tagsWithCounts, setTagsWithCounts] = useState<TagWithCount[]>([]);
+  const [isLoadingTags, setIsLoadingTags] = useState(false);
+  const [capturedWindows, setCapturedWindows] = useState<WindowSnapshot[]>([]);
+  const [editingSession, setEditingSession] = useState<Session | null>(null);
+  const [restoringSession, setRestoringSession] = useState<Session | null>(null);
+  const [duplicates, setDuplicates] = useState<DuplicateDetectionResult | null>(null);
+  const [restoreProgress, setRestoreProgress] = useState<RestoreProgress | null>(null);
+  const [tags, setTags] = useState<Tag[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedFilterTags, setSelectedFilterTags] = useState<string[]>([]);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [deletingSession, setDeletingSession] = useState<Session | null>(null);
+  const { toasts, dismissToast, showSessionSaved, showError, showSuccess } = useToast();
+  const { sessions, isLoading, refresh } = useSessions();
 
-  const handleSaveSession = async () => {
-    if (!sessionName.trim()) {
-      showError('Nome obrigatório', 'Digite um nome para a sessão');
-      return;
+  // Filter sessions based on search term and selected tags
+  const filteredSessions = useMemo(() => {
+    let result = [...sessions];
+
+    // Filter by search term (case-insensitive)
+    if (searchTerm.trim()) {
+      const term = searchTerm.toLowerCase().trim();
+      result = result.filter(session =>
+        session.name.toLowerCase().includes(term)
+      );
     }
 
-    setIsSaving(true);
+    // Filter by tags (OR logic - session must have at least one selected tag)
+    if (selectedFilterTags.length > 0) {
+      result = result.filter(session =>
+        session.tags.some(tag => selectedFilterTags.includes(tag))
+      );
+    }
 
+    return result;
+  }, [sessions, searchTerm, selectedFilterTags]);
+
+  const hasActiveFilters = searchTerm.length > 0 || selectedFilterTags.length > 0;
+
+  const handleSearchChange = useCallback((term: string) => {
+    setSearchTerm(term);
+  }, []);
+
+  const handleTagsFilterChange = useCallback((tags: string[]) => {
+    setSelectedFilterTags(tags);
+  }, []);
+
+  const handleClearFilters = useCallback(() => {
+    setSearchTerm('');
+    setSelectedFilterTags([]);
+  }, []);
+
+  const loadTags = async () => {
     try {
-      // Initialize database
+      await initializeDatabase();
+      const result = await getAllTags();
+      if (isOk(result)) {
+        setTags(result.value);
+      }
+    } catch (error) {
+      console.error('Failed to load tags:', error);
+    }
+  };
+
+  // Load tags on mount for search filter
+  useEffect(() => {
+    loadTags();
+  }, []);
+
+  const handleOpenSaveModal = async () => {
+    try {
       await initializeDatabase();
 
       // Capture all tabs
@@ -31,8 +115,23 @@ export function App() {
         return;
       }
 
+      // Load existing tags
+      await loadTags();
+
+      setCapturedWindows([...captureResult.value.windows]);
+      setIsSaveModalOpen(true);
+    } catch (error) {
+      showError('Erro inesperado', 'Tente novamente');
+      console.error('Capture error:', error);
+    }
+  };
+
+  const handleSaveSession = async (data: SaveSessionData) => {
+    setIsSaving(true);
+
+    try {
       // Convert to storage format (remove runtime fields)
-      const windows: StoredWindowSnapshot[] = captureResult.value.windows.map((w) => ({
+      const windows: StoredWindowSnapshot[] = capturedWindows.map((w) => ({
         windowId: w.windowId,
         tabs: w.tabs.map((t) => ({
           url: t.url,
@@ -45,9 +144,10 @@ export function App() {
 
       // Save session
       const saveResult = await createSession({
-        name: sessionName.trim(),
-        description: description.trim() || undefined,
+        name: data.name,
+        description: data.description,
         windows,
+        tags: [...data.tags],
       });
 
       if (!isOk(saveResult)) {
@@ -62,9 +162,9 @@ export function App() {
         saveResult.value.totalWindows
       );
 
-      // Clear form
-      setSessionName('');
-      setDescription('');
+      // Close modal and refresh list
+      setIsSaveModalOpen(false);
+      await refresh();
     } catch (error) {
       showError('Erro inesperado', 'Tente novamente');
       console.error('Save session error:', error);
@@ -73,59 +173,423 @@ export function App() {
     }
   };
 
+  const handleCreateTag = async (name: string): Promise<Tag | null> => {
+    try {
+      const result = await createTag({ name });
+      if (isOk(result)) {
+        setTags(prev => [...prev, result.value]);
+        return result.value;
+      }
+      return null;
+    } catch (error) {
+      console.error('Failed to create tag:', error);
+      return null;
+    }
+  };
+
+  const loadTagsWithCounts = async () => {
+    setIsLoadingTags(true);
+    try {
+      await initializeDatabase();
+      const tagsResult = await getAllTags();
+      if (isOk(tagsResult)) {
+        const db = getDatabase();
+        const allSessions = await db.sessions.toArray();
+
+        const tagsWithSessionCounts: TagWithCount[] = tagsResult.value.map(tag => ({
+          ...tag,
+          sessionCount: allSessions.filter(s => s.tags.includes(tag.name)).length,
+        }));
+
+        setTagsWithCounts(tagsWithSessionCounts);
+        setTags(tagsResult.value);
+      }
+    } catch (error) {
+      console.error('Failed to load tags:', error);
+    } finally {
+      setIsLoadingTags(false);
+    }
+  };
+
+  const handleOpenTagPanel = async () => {
+    await loadTagsWithCounts();
+    setIsTagPanelOpen(true);
+  };
+
+  const handleCreateTagInPanel = async (name: string, color?: string): Promise<boolean> => {
+    try {
+      const result = await createTag({ name, color });
+      if (isOk(result)) {
+        await loadTagsWithCounts();
+        showSuccess('Tag criada', `"${name}" foi criada`);
+        return true;
+      } else {
+        showError('Erro ao criar tag', result.error.getUserMessage());
+        return false;
+      }
+    } catch (error) {
+      showError('Erro inesperado', 'Tente novamente');
+      return false;
+    }
+  };
+
+  const handleUpdateTagInPanel = async (id: number, name: string, color?: string): Promise<boolean> => {
+    try {
+      const result = await updateTag({ id, name, color });
+      if (isOk(result)) {
+        await loadTagsWithCounts();
+        showSuccess('Tag atualizada', `"${name}" foi salva`);
+        return true;
+      } else {
+        showError('Erro ao atualizar tag', result.error.getUserMessage());
+        return false;
+      }
+    } catch (error) {
+      showError('Erro inesperado', 'Tente novamente');
+      return false;
+    }
+  };
+
+  const handleDeleteTagInPanel = async (id: number, sessionCount: number): Promise<boolean> => {
+    try {
+      const result = await deleteTag(id);
+      if (isOk(result)) {
+        await loadTagsWithCounts();
+        await refresh(); // Refresh sessions to update tag references
+        showSuccess('Tag excluída', sessionCount > 0 ? `Tag removida de ${sessionCount} sessões` : 'Tag excluída');
+        return true;
+      } else {
+        showError('Erro ao excluir tag', result.error.getUserMessage());
+        return false;
+      }
+    } catch (error) {
+      showError('Erro inesperado', 'Tente novamente');
+      return false;
+    }
+  };
+
+  const handleRestore = async (session: Session) => {
+    try {
+      await initializeDatabase();
+
+      // Detect duplicates
+      const duplicateResult = await detectDuplicates(session.windows);
+      if (isOk(duplicateResult)) {
+        setDuplicates(duplicateResult.value);
+      } else {
+        setDuplicates(null);
+      }
+
+      setRestoringSession(session);
+      setRestoreProgress(null);
+      setIsRestoreModalOpen(true);
+    } catch (error) {
+      showError('Erro inesperado', 'Tente novamente');
+      console.error('Restore session error:', error);
+    }
+  };
+
+  const handleRestoreSession = async (target: RestoreTarget, skipDuplicates: boolean) => {
+    if (!restoringSession) return;
+
+    setIsRestoring(true);
+    setRestoreProgress(null);
+
+    try {
+      // Filter duplicates if needed
+      let windowsToRestore = restoringSession.windows;
+      if (skipDuplicates && duplicates && duplicates.duplicateCount > 0) {
+        windowsToRestore = filterByStrategy(
+          restoringSession.windows,
+          duplicates.duplicateUrls,
+          'skip'
+        );
+      }
+
+      // Restore based on target
+      const restoreFunc = target === 'new-window' ? restoreToNewWindows : restoreToCurrentWindow;
+      const result = await restoreFunc(windowsToRestore, {
+        onProgress: (progress) => setRestoreProgress(progress),
+      });
+
+      if (isOk(result)) {
+        const { tabsRestored, windowsRestored, skippedTabs } = result.value;
+
+        if (skippedTabs.length > 0) {
+          showSuccess(
+            'Sessão restaurada',
+            `${tabsRestored} abas em ${windowsRestored} janelas (${skippedTabs.length} ignoradas)`
+          );
+        } else {
+          showSuccess(
+            'Sessão restaurada',
+            `${tabsRestored} abas em ${windowsRestored} janelas`
+          );
+        }
+
+        // Close modal
+        setIsRestoreModalOpen(false);
+        setRestoringSession(null);
+        setDuplicates(null);
+        setRestoreProgress(null);
+      } else {
+        showError('Erro ao restaurar', result.error.getUserMessage());
+      }
+    } catch (error) {
+      showError('Erro inesperado', 'Tente novamente');
+      console.error('Restore session error:', error);
+    } finally {
+      setIsRestoring(false);
+    }
+  };
+
+  const handleEdit = async (session: Session) => {
+    try {
+      await initializeDatabase();
+      await loadTags();
+      setEditingSession(session);
+      setIsEditModalOpen(true);
+    } catch (error) {
+      showError('Erro inesperado', 'Tente novamente');
+      console.error('Edit session error:', error);
+    }
+  };
+
+  const handleEditSession = async (data: EditSessionData) => {
+    setIsSaving(true);
+
+    try {
+      const db = getDatabase();
+
+      // Update the session with new windows data
+      const updated = {
+        ...editingSession!,
+        name: data.name,
+        description: data.description,
+        tags: [...data.tags],
+        windows: data.windows,
+        totalTabs: data.windows.reduce((sum, w) => sum + w.tabs.length, 0),
+        totalWindows: data.windows.length,
+        updatedAt: new Date(),
+      };
+
+      await db.sessions.put(updated);
+
+      showSuccess('Sessão atualizada', `"${data.name}" foi salva`);
+
+      // Close modal and refresh list
+      setIsEditModalOpen(false);
+      setEditingSession(null);
+      await refresh();
+    } catch (error) {
+      showError('Erro ao salvar', 'Não foi possível salvar as alterações');
+      console.error('Edit session error:', error);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleDelete = (session: Session) => {
+    setDeletingSession(session);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!deletingSession) return;
+
+    try {
+      const result = await deleteSession(deletingSession.id);
+      if (isOk(result)) {
+        showSuccess('Sessão excluída', `"${deletingSession.name}" foi removida`);
+        await refresh();
+      } else {
+        showError('Erro ao excluir', result.error.getUserMessage());
+      }
+    } catch (error) {
+      showError('Erro inesperado', 'Tente novamente');
+      console.error('Delete session error:', error);
+    } finally {
+      setIsDeleteModalOpen(false);
+      setDeletingSession(null);
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setIsDeleteModalOpen(false);
+    setDeletingSession(null);
+  };
+
+  const handleQuickSave = () => {
+    handleOpenSaveModal();
+  };
+
+  const handleExport = async () => {
+    setIsExporting(true);
+    try {
+      const result = await exportSessions();
+      if (isOk(result)) {
+        showSuccess(
+          'Exportação concluída',
+          `${result.value.sessionCount} sessões exportadas`
+        );
+      } else {
+        showError('Erro ao exportar', result.error.getUserMessage());
+      }
+    } catch (error) {
+      showError('Erro inesperado', 'Tente novamente');
+      console.error('Export error:', error);
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  const handleImport = async () => {
+    setIsImporting(true);
+    try {
+      const result = await importSessions('merge');
+      if (isOk(result)) {
+        showSuccess(
+          'Importação concluída',
+          `${result.value.sessionsImported} sessões importadas`
+        );
+        await refresh();
+      } else {
+        showError('Erro ao importar', result.error.getUserMessage());
+      }
+    } catch (error) {
+      showError('Erro inesperado', 'Tente novamente');
+      console.error('Import error:', error);
+    } finally {
+      setIsImporting(false);
+    }
+  };
+
   return (
-    <div className="container flex flex-col gap-md">
+    <div className="popup-layout">
       <ToastContainer toasts={toasts} onDismiss={dismissToast} />
 
+      {/* Save Session Modal */}
+      <SaveSessionModal
+        isOpen={isSaveModalOpen}
+        windows={capturedWindows}
+        existingTags={tags}
+        onSave={handleSaveSession}
+        onCancel={() => setIsSaveModalOpen(false)}
+        onCreateTag={handleCreateTag}
+        isSaving={isSaving}
+      />
+
+      {/* Edit Session Modal */}
+      <EditSessionModal
+        isOpen={isEditModalOpen}
+        session={editingSession}
+        existingTags={tags}
+        onSave={handleEditSession}
+        onCancel={() => {
+          setIsEditModalOpen(false);
+          setEditingSession(null);
+        }}
+        onCreateTag={handleCreateTag}
+        isSaving={isSaving}
+      />
+
+      {/* Restore Options Modal */}
+      <RestoreOptionsModal
+        isOpen={isRestoreModalOpen}
+        session={restoringSession}
+        duplicates={duplicates}
+        onRestore={handleRestoreSession}
+        onCancel={() => {
+          if (!isRestoring) {
+            setIsRestoreModalOpen(false);
+            setRestoringSession(null);
+            setDuplicates(null);
+            setRestoreProgress(null);
+          }
+        }}
+        isRestoring={isRestoring}
+        progress={restoreProgress}
+      />
+
+      {/* Tag Management Panel */}
+      <TagManagementPanel
+        isOpen={isTagPanelOpen}
+        tags={tagsWithCounts}
+        onClose={() => setIsTagPanelOpen(false)}
+        onCreateTag={handleCreateTagInPanel}
+        onUpdateTag={handleUpdateTagInPanel}
+        onDeleteTag={handleDeleteTagInPanel}
+        isLoading={isLoadingTags}
+      />
+
+      {/* Delete Session Modal */}
+      {deletingSession && (
+        <DeleteSessionModal
+          isOpen={isDeleteModalOpen}
+          sessionName={deletingSession.name}
+          totalTabs={deletingSession.totalTabs}
+          onConfirm={handleConfirmDelete}
+          onCancel={handleCancelDelete}
+        />
+      )}
+
       {/* Header */}
-      <header className="flex items-center justify-between">
-        <h1 className="text-heading">SessionKeeper</h1>
+      <header className="popup-header">
+        <div className="flex items-center gap-sm">
+          <span className="popup-logo">📑</span>
+          <h1 className="text-heading">Session Keeper</h1>
+        </div>
+        <button
+          className="btn btn-icon btn-secondary"
+          aria-label="Configurações"
+          onClick={handleOpenTagPanel}
+        >
+          ⚙️
+        </button>
       </header>
 
-      {/* Save Session Form */}
-      <section className="card flex flex-col gap-md">
-        <h2 className="text-body" style={{ fontWeight: 500 }}>
-          Salvar Sessão Atual
-        </h2>
+      {/* Search and Filter Bar */}
+      {!isLoading && sessions.length > 0 && (
+        <SearchFilterBar
+          tags={tags}
+          totalSessions={sessions.length}
+          filteredCount={filteredSessions.length}
+          onSearchChange={handleSearchChange}
+          onTagsChange={handleTagsFilterChange}
+          selectedTags={selectedFilterTags}
+          searchTerm={searchTerm}
+        />
+      )}
 
-        <div className="flex flex-col gap-sm">
-          <input
-            type="text"
-            className="input"
-            placeholder="Nome da sessão *"
-            value={sessionName}
-            onChange={(e) => setSessionName(e.target.value)}
-            maxLength={100}
-            disabled={isSaving}
+      {/* Main Content */}
+      <main className="popup-main">
+        {/* Search Empty State */}
+        {!isLoading && sessions.length > 0 && hasActiveFilters && filteredSessions.length === 0 ? (
+          <SearchEmptyState onClear={handleClearFilters} />
+        ) : (
+          /* Session List */
+          <SessionList
+            sessions={filteredSessions}
+            isLoading={isLoading}
+            onRestore={handleRestore}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+            onSaveFirst={handleOpenSaveModal}
           />
+        )}
+      </main>
 
-          <textarea
-            className="input"
-            placeholder="Descrição (opcional)"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            maxLength={500}
-            rows={2}
-            style={{ resize: 'none' }}
-            disabled={isSaving}
-          />
-        </div>
-
-        <button
-          className="btn btn-primary"
-          onClick={handleSaveSession}
-          disabled={isSaving || !sessionName.trim()}
-        >
-          {isSaving ? 'Salvando...' : 'Salvar Sessão'}
-        </button>
-      </section>
-
-      {/* Placeholder for session list */}
-      <section className="card">
-        <p className="text-body-sm text-muted" style={{ textAlign: 'center' }}>
-          Suas sessões salvas aparecerão aqui
-        </p>
-      </section>
+      {/* Footer - Quick Actions Bar */}
+      <QuickActionsBar
+        onSaveSession={handleQuickSave}
+        onExport={handleExport}
+        onImport={handleImport}
+        isSaving={isSaving}
+        isExporting={isExporting}
+        isImporting={isImporting}
+        canExport={sessions.length > 0}
+        canSave={true}
+      />
     </div>
   );
 }

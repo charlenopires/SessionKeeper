@@ -1,7 +1,7 @@
 import type { StoredWindowSnapshot, StoredTab } from './types';
 import { Result, Ok, Err } from '../storage/result';
 import { SessionManagementError } from './errors';
-import { validateUrl, type TabValidationStatus } from './url-validation';
+import { validateUrl } from './url-validation';
 
 /**
  * Default timeout for tab creation (30 seconds)

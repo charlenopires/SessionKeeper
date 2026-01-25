@@ -7,7 +7,6 @@ import {
   QuotaExceededError,
   isQuotaExceededError,
 } from './errors';
-import type { Transaction } from 'dexie';
 
 export type StorageError = DatabaseError;
 

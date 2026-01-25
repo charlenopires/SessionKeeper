@@ -164,7 +164,7 @@ export async function getStorageStats(): Promise<Result<StorageStats, StorageErr
     ]);
 
     // Calculate total tabs
-    const totalTabs = sessions.reduce((sum, session) => sum + session.tabs.length, 0);
+    const totalTabs = sessions.reduce((sum, session) => sum + session.totalTabs, 0);
 
     // Find oldest and newest sessions
     const sortedByDate = [...sessions].sort(
