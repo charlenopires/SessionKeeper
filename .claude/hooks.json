@@ -1,0 +1,20 @@
+{
+  "hooks": [
+    {
+      "command": "cwa memory observe \"File created: $TOOL_INPUT_PATH\" --obs-type change --files-modified \"$TOOL_INPUT_PATH\"",
+      "event": "PostToolUse",
+      "matcher": {
+        "tool_name": "write_to_file"
+      },
+      "timeout": 10000
+    },
+    {
+      "command": "cwa memory observe \"File modified: $TOOL_INPUT_PATH\" --obs-type change --files-modified \"$TOOL_INPUT_PATH\"",
+      "event": "PostToolUse",
+      "matcher": {
+        "tool_name": "edit_file"
+      },
+      "timeout": 10000
+    }
+  ]
+}

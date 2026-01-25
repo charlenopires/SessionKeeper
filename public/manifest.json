@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "SessionKeeper",
+  "version": "0.1.0",
+  "description": "Chrome extension for managing browser sessions",
+  "permissions": ["tabs", "storage", "notifications"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "SessionKeeper"
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

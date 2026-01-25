@@ -1,0 +1,1 @@
+{"version":3,"file":"IModuleInit.d.ts","sourceRoot":"","sources":["../../../src/module/types/IModuleInit.ts"],"names":[],"mappings":"AAAA,OAAO,QAAQ,MAAM,4BAA4B,CAAC;AAClD,OAAO,aAAa,MAAM,+BAA+B,CAAC;AAC1D,OAAO,EAAE,GAAG,EAAE,MAAM,KAAK,CAAC;AAE1B;;GAEG;AACH,MAAM,CAAC,OAAO,WAAW,WAAW;IACnC,MAAM,EAAE,aAAa,CAAC;IACtB,GAAG,EAAE,GAAG,GAAG,QAAQ,CAAC;IACpB,MAAM,EAAE,MAAM,CAAC;CACf"}

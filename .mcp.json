@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "cwa": {
+      "args": [
+        "mcp",
+        "stdio"
+      ],
+      "command": "cwa",
+      "env": {}
+    }
+  }
+}
