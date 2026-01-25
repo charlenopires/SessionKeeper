@@ -5,22 +5,28 @@ chrome.runtime.onInstalled.addListener(async (details) => {
   try {
     await initializeDatabase();
 
-    const installReason = details.reason;
-    const previousVersion = details.previousVersion;
+    const { reason, previousVersion } = details;
 
-    if (installReason === 'install') {
-      console.log('SessionKeeper extension installed and database initialized');
-    } else if (installReason === 'update') {
-      console.log(`SessionKeeper updated from version ${previousVersion}. Database migrations applied automatically.`);
+    switch (reason) {
+      case 'install':
+        console.log('[SessionKeeper] Extension installed successfully');
+        break;
+      case 'update':
+        console.log(`[SessionKeeper] Updated from v${previousVersion} to v${chrome.runtime.getManifest().version}`);
+        break;
+      case 'chrome_update':
+      case 'shared_module_update':
+        // Silent on browser updates
+        break;
     }
   } catch (error) {
     const { technical, user } = getErrorMessage(error);
-    console.error('Failed to initialize SessionKeeper:', technical, error);
+    console.error('[SessionKeeper] Initialization failed:', technical, error);
 
     chrome.notifications?.create({
       type: 'basic',
       iconUrl: 'icons/icon48.png',
-      title: 'SessionKeeper Initialization Error',
+      title: 'SessionKeeper Error',
       message: user,
       priority: 2,
     });
@@ -30,15 +36,15 @@ chrome.runtime.onInstalled.addListener(async (details) => {
 chrome.runtime.onStartup.addListener(async () => {
   try {
     await initializeDatabase();
-    console.log('SessionKeeper extension started and database initialized');
+    console.log('[SessionKeeper] Browser started, database ready');
   } catch (error) {
     const { technical, user } = getErrorMessage(error);
-    console.error('Failed to initialize SessionKeeper on startup:', technical, error);
+    console.error('[SessionKeeper] Startup failed:', technical, error);
 
     chrome.notifications?.create({
       type: 'basic',
       iconUrl: 'icons/icon48.png',
-      title: 'SessionKeeper Startup Error',
+      title: 'SessionKeeper Error',
       message: user,
       priority: 2,
     });
