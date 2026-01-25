@@ -148,43 +148,79 @@ All UI implementation MUST follow the design tokens defined below.
 
 ## Components
 
-### Timer Display
+### Session Card
 
-Large time display with play/pause controls
+Expandable card showing session info with actions.
 
-**Variants:** active, paused
+**Structure:** Name, description (truncated), tag badges, window/tab counters, relative date
 
-**States:** running, stopped, paused
+**Variants:** collapsed (default), expanded (shows tab list)
 
-### Task List Item
+**States:** default, hover (shows action buttons), expanded
 
-Time tracking entry with task name and duration
+**Actions:** Restore, Edit, Delete (visible on hover)
 
-**Variants:** active, completed
+### Quick Actions Bar
 
-**States:** default, hover, active
+Fixed bar with primary action button.
+
+**Content:** "Save Current Session" button
+
+**States:** default, loading
+
+### Modal
+
+Overlay dialog for forms and confirmations.
+
+**Variants:** form (SaveSession, EditSession), confirm (danger, warning), options (RestoreOptions)
+
+**States:** open, closed
+
+**Behavior:** Focus trap, Escape to close, backdrop click to close
+
+### Search Filter Bar
+
+Combined search and tag filter.
+
+**Content:** Search input with icon, tag dropdown chips, results counter, clear button
+
+**States:** default, filtered (shows clear button and count)
+
+### Toast
+
+Notification popup at top-right.
+
+**Variants:** success (green), error (red), warning (yellow), info (blue)
+
+**States:** entering, visible, exiting
+
+**Behavior:** Auto-dismiss after 3s, manual close button, stacks multiple
+
+### Tag Badge
+
+Small colored label.
+
+**States:** default, selected (in filter)
+
+**Size:** Small pill shape with text
 
 ### Icon Button
 
-Circular button with icon
+Circular button with icon only.
 
-**Variants:** primary, secondary
+**Variants:** primary, ghost
 
 **States:** default, hover, pressed, disabled
 
-### Dropdown
+**Accessibility:** Requires aria-label
 
-Project selector dropdown
+### Input Field
 
-**Variants:** default
+Text input with optional validation.
 
-**States:** closed, open, disabled
+**Variants:** default, error
 
-### Time Badge
+**States:** default, focus, disabled, error
 
-Duration display badge
-
-**Variants:** default, total
-
-**States:** default
+**Validation:** Shows error message below when invalid
 
