@@ -11,11 +11,19 @@ Persistência de dados em IndexedDB usando Dexie.js, CRUD de entidades, migratio
 ## Key Files
 
 - `src/storage/db.ts` - Database schema, migrations, initialization
-- `src/storage/session-operations.ts` - Session CRUD operations
-- `src/storage/tag-operations.ts` - Tag CRUD operations
+- `src/storage/session-operations.ts` - Session CRUD operations (16KB)
+- `src/storage/tag-operations.ts` - Tag CRUD operations (9KB)
 - `src/storage/errors.ts` - Typed error classes
 - `src/storage/result.ts` - Result<T, E> pattern
-- `src/storage/queries.ts` - Query utilities
+- `src/storage/queries.ts` - Query utilities (7KB)
+- `src/storage/index.ts` - Public API exports
+
+### Documentation
+
+- `src/storage/ERROR_HANDLING.md` - Error handling patterns
+- `src/storage/MIGRATIONS.md` - Database migration guide
+- `src/storage/TRANSACTIONS.md` - Transaction patterns with examples
+- `src/storage/transaction-examples.ts` - Code examples for transactions
 
 ## Database Schema
 
@@ -62,6 +70,25 @@ interface Settings {
 }
 ```
 
+## Main Operations
+
+### Session Operations (`session-operations.ts`)
+- `createSession(data)` - Create with UUID generation
+- `getSession(id)` - Get by ID
+- `updateSession(id, data)` - Partial update with updatedAt
+- `deleteSession(id)` - Delete by ID
+- `listSessions()` - List all sorted by createdAt DESC
+- `searchSessions(query)` - Search by name/description
+
+### Tag Operations (`tag-operations.ts`)
+- `createTag(name, color?)` - Create with unique name check
+- `getTag(id)` - Get by ID
+- `getTagByName(name)` - Get by name
+- `updateTag(id, data)` - Update name/color
+- `deleteTag(id)` - Delete tag
+- `listTags()` - List all sorted by name
+- `getSessionCountByTag(tagName)` - Count sessions using tag
+
 ## Patterns
 
 - **Result Pattern**: All operations return `Result<T, E>` instead of throwing
@@ -77,6 +104,8 @@ DatabaseInitializationError  // Failed to open DB
 DatabaseNotInitializedError  // getDatabase() before init
 QuotaExceededError          // Storage quota exceeded
 SessionNotFoundError        // Session ID not found
+TagNotFoundError            // Tag ID not found
+DuplicateTagNameError       // Tag name already exists
 ```
 
 ## Important Rules
@@ -85,3 +114,4 @@ SessionNotFoundError        // Session ID not found
 - Never store Date objects directly - Dexie handles serialization
 - Tag names must be unique (enforced by index)
 - Session IDs are UUID v4, generated with `crypto.randomUUID()`
+- Run `bun test src/storage` to verify changes
