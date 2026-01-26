@@ -48,7 +48,7 @@ describe('validateExportData', () => {
     const result = validateExportData('not an object');
 
     expect(result.isValid).toBe(false);
-    expect(result.errors[0]).toContain('objeto JSON válido');
+    expect(result.errors[0]).toContain('valid JSON object');
   });
 
   it('should reject missing version', () => {
@@ -192,7 +192,7 @@ describe('parseAndValidateJson', () => {
 
     expect(isErr(result)).toBe(true);
     if (isErr(result)) {
-      expect(result.error.getUserMessage()).toContain('JSON válido');
+      expect(result.error.getUserMessage()).toContain('valid JSON');
     }
   });
 
@@ -201,7 +201,7 @@ describe('parseAndValidateJson', () => {
 
     expect(isErr(result)).toBe(true);
     if (isErr(result)) {
-      expect(result.error.getUserMessage()).toContain('inválida');
+      expect(result.error.getUserMessage()).toContain('Invalid');
     }
   });
 });

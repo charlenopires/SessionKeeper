@@ -52,13 +52,13 @@ export interface WindowsValidationResult {
 export function validateUrl(url: string | undefined): UrlValidationResult {
   // Empty or undefined URL
   if (!url || url.trim() === '') {
-    return { isValid: false, reason: 'URL vazia ou indefinida' };
+    return { isValid: false, reason: 'Empty or undefined URL' };
   }
 
   // Check for blocked prefixes (chrome://, about:, etc.)
   for (const prefix of BLOCKED_PREFIXES) {
     if (url.toLowerCase().startsWith(prefix)) {
-      return { isValid: false, reason: `URL de sistema bloqueada: ${prefix}` };
+      return { isValid: false, reason: `Blocked system URL: ${prefix}` };
     }
   }
 
@@ -68,17 +68,17 @@ export function validateUrl(url: string | undefined): UrlValidationResult {
 
     // Check for valid protocol
     if (!VALID_PROTOCOLS.includes(parsed.protocol)) {
-      return { isValid: false, reason: `Protocolo inválido: ${parsed.protocol}` };
+      return { isValid: false, reason: `Invalid protocol: ${parsed.protocol}` };
     }
 
     // Check for valid hostname (except for file:// URLs)
     if (parsed.protocol !== 'file:' && !parsed.hostname) {
-      return { isValid: false, reason: 'URL sem hostname' };
+      return { isValid: false, reason: 'URL missing hostname' };
     }
 
     return { isValid: true };
   } catch {
-    return { isValid: false, reason: 'URL malformada' };
+    return { isValid: false, reason: 'Malformed URL' };
   }
 }
 

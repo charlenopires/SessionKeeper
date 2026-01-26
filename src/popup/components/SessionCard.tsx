@@ -72,24 +72,24 @@ export function SessionCard({ session, onRestore, onEdit, onDelete }: SessionCar
           <button
             className="btn btn-icon btn-secondary session-action-btn"
             onClick={handleRestore}
-            aria-label="Restaurar sessão"
-            title="Restaurar"
+            aria-label="Restore session"
+            title="Restore"
           >
             🔄
           </button>
           <button
             className="btn btn-icon btn-secondary session-action-btn"
             onClick={handleEdit}
-            aria-label="Editar sessão"
-            title="Editar"
+            aria-label="Edit session"
+            title="Edit"
           >
             ✏️
           </button>
           <button
             className="btn btn-icon btn-secondary session-action-btn"
             onClick={handleDelete}
-            aria-label="Excluir sessão"
-            title="Excluir"
+            aria-label="Delete session"
+            title="Delete"
           >
             🗑️
           </button>
@@ -109,10 +109,10 @@ export function SessionCard({ session, onRestore, onEdit, onDelete }: SessionCar
 
       {/* Meta info */}
       <div className="session-card-meta">
-        <span className="session-card-stat" title="Janelas">
+        <span className="session-card-stat" title="Windows">
           🪟 {session.totalWindows}
         </span>
-        <span className="session-card-stat" title="Abas">
+        <span className="session-card-stat" title="Tabs">
           📄 {session.totalTabs}
         </span>
         <span className="session-card-date text-muted">
@@ -126,13 +126,13 @@ export function SessionCard({ session, onRestore, onEdit, onDelete }: SessionCar
           {session.windows.map((window, windowIndex) => (
             <div key={windowIndex} className="session-preview-window">
               <div className="session-preview-window-header text-caption text-muted">
-                Janela {windowIndex + 1} ({window.tabs.length} abas)
+                Window {windowIndex + 1} ({window.tabs.length} tabs)
               </div>
               <ul className="session-preview-tabs">
                 {window.tabs.map((tab, tabIndex) => (
                   <li key={tabIndex} className="session-preview-tab">
                     {tab.pinned && (
-                      <span className="tab-pin-indicator" title="Aba fixada">📌</span>
+                      <span className="tab-pin-indicator" title="Pinned tab">📌</span>
                     )}
                     {tab.favIconUrl ? (
                       <img

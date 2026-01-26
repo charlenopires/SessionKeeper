@@ -583,7 +583,7 @@ describe('restoreToNewWindows - partial failure handling', () => {
       // First tab opens window, second fails, third succeeds
       expect(result.value.tabsRestored).toBe(2);
       expect(result.value.skippedTabs).toHaveLength(1);
-      expect(result.value.skippedTabs[0].reason).toContain('Falha ao criar aba');
+      expect(result.value.skippedTabs[0].reason).toContain('Failed to create tab');
     }
   });
 
@@ -707,7 +707,7 @@ describe('restoreToNewWindows - timeout handling', () => {
     mockTabsCreate.mockImplementation(() => {
       callCount++;
       if (callCount === 1) {
-        return Promise.reject(new Error('Timeout: criação de aba excedeu 30s'));
+        return Promise.reject(new Error('Timeout: tab creation exceeded 30s'));
       }
       return Promise.resolve({ id: 102 });
     });
@@ -722,7 +722,7 @@ describe('restoreToNewWindows - timeout handling', () => {
 
   it('should include timeout message in skipped tab reason', async () => {
     mockTabsCreate.mockImplementation(() =>
-      Promise.reject(new Error('Timeout: criação de aba excedeu 30s'))
+      Promise.reject(new Error('Timeout: tab creation exceeded 30s'))
     );
 
     const windows: StoredWindowSnapshot[] = [
@@ -762,8 +762,8 @@ describe('Chrome API unavailability', () => {
 
     expect(isErr(result)).toBe(true);
     if (isErr(result)) {
-      expect(result.error.getUserMessage()).toContain('janelas');
-      expect(result.error.getUserMessage()).toContain('permissões');
+      expect(result.error.getUserMessage()).toContain('windows');
+      expect(result.error.getUserMessage()).toContain('permissions');
     }
 
     globalThis.chrome = originalChrome;
@@ -778,8 +778,8 @@ describe('Chrome API unavailability', () => {
 
     expect(isErr(result)).toBe(true);
     if (isErr(result)) {
-      expect(result.error.getUserMessage()).toContain('abas');
-      expect(result.error.getUserMessage()).toContain('permissões');
+      expect(result.error.getUserMessage()).toContain('tabs');
+      expect(result.error.getUserMessage()).toContain('permissions');
     }
 
     globalThis.chrome = originalChrome;
@@ -795,7 +795,7 @@ describe('Chrome API unavailability', () => {
     expect(isErr(result)).toBe(true);
     if (isErr(result)) {
       expect(result.error.getUserMessage()).toContain('Chrome');
-      expect(result.error.getUserMessage()).toContain('extensão');
+      expect(result.error.getUserMessage()).toContain('extension');
     }
 
     globalThis.chrome = originalChrome;

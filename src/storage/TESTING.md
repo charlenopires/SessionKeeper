@@ -2,13 +2,13 @@
 
 ## Limitation
 
-IndexedDB tests require a browser environment. Bun (Node.js runtime) não suporta IndexedDB nativamente, mesmo com polyfills como `fake-indexeddb`.
+IndexedDB tests require a browser environment. Bun (Node.js runtime) doesn't support IndexedDB natively, even with polyfills like `fake-indexeddb`.
 
 ## Solution Options
 
 ### Option 1: Browser-based testing (Recommended)
 
-Use Playwright ou Puppeteer para executar testes em ambiente real do browser:
+Use Playwright or Puppeteer to run tests in real browser environment:
 
 ```bash
 bun add -d @playwright/test
@@ -26,17 +26,17 @@ test('should create session', async ({ page }) => {
 
 ### Option 2: Manual Testing
 
-1. Load extensão em modo desenvolvedor no Chrome
-2. Abra DevTools > Application > IndexedDB
-3. Execute operações e verifique dados
+1. Load extension in developer mode in Chrome
+2. Open DevTools > Application > IndexedDB
+3. Execute operations and verify data
 
 ### Option 3: Integration Tests
 
-Ao invés de unit tests, crie testes de integração end-to-end que testem a extensão completa.
+Instead of unit tests, create end-to-end integration tests that test the complete extension.
 
 ## Current Tests
 
-Os testes em `session-operations.test.ts` estão escritos mas **não executam** no Bun devido à falta de IndexedDB. São referência para quando implementarmos testing em browser.
+Tests in `session-operations.test.ts` are written but **do not run** in Bun due to lack of IndexedDB. They serve as reference for when we implement browser testing.
 
 ## Running Tests
 
@@ -50,4 +50,4 @@ bun test src/storage/errors.test.ts
 
 ## Future
 
-Quando tivermos UI (popup), implementaremos E2E tests com Playwright que testam toda a stack incluindo Storage.
+When we have UI (popup), we will implement E2E tests with Playwright that test the entire stack including Storage.

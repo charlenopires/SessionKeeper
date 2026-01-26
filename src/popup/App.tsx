@@ -111,7 +111,7 @@ export function App() {
       const captureResult = await captureAllTabs();
 
       if (!isOk(captureResult)) {
-        showError('Erro ao capturar', captureResult.error.getUserMessage());
+        showError('Capture error', captureResult.error.getUserMessage());
         return;
       }
 
@@ -121,7 +121,7 @@ export function App() {
       setCapturedWindows([...captureResult.value.windows]);
       setIsSaveModalOpen(true);
     } catch (error) {
-      showError('Erro inesperado', 'Tente novamente');
+      showError('Unexpected error', 'Please try again');
       console.error('Capture error:', error);
     }
   };
@@ -151,7 +151,7 @@ export function App() {
       });
 
       if (!isOk(saveResult)) {
-        showError('Erro ao salvar', saveResult.error.getUserMessage());
+        showError('Save error', saveResult.error.getUserMessage());
         return;
       }
 
@@ -166,7 +166,7 @@ export function App() {
       setIsSaveModalOpen(false);
       await refresh();
     } catch (error) {
-      showError('Erro inesperado', 'Tente novamente');
+      showError('Unexpected error', 'Please try again');
       console.error('Save session error:', error);
     } finally {
       setIsSaving(false);
@@ -221,14 +221,14 @@ export function App() {
       const result = await createTag({ name, color });
       if (isOk(result)) {
         await loadTagsWithCounts();
-        showSuccess('Tag criada', `"${name}" foi criada`);
+        showSuccess('Tag created', `"${name}" was created`);
         return true;
       } else {
-        showError('Erro ao criar tag', result.error.getUserMessage());
+        showError('Error creating tag', result.error.getUserMessage());
         return false;
       }
     } catch (error) {
-      showError('Erro inesperado', 'Tente novamente');
+      showError('Unexpected error', 'Please try again');
       return false;
     }
   };
@@ -238,14 +238,14 @@ export function App() {
       const result = await updateTag({ id, name, color });
       if (isOk(result)) {
         await loadTagsWithCounts();
-        showSuccess('Tag atualizada', `"${name}" foi salva`);
+        showSuccess('Tag updated', `"${name}" was saved`);
         return true;
       } else {
-        showError('Erro ao atualizar tag', result.error.getUserMessage());
+        showError('Error updating tag', result.error.getUserMessage());
         return false;
       }
     } catch (error) {
-      showError('Erro inesperado', 'Tente novamente');
+      showError('Unexpected error', 'Please try again');
       return false;
     }
   };
@@ -256,14 +256,14 @@ export function App() {
       if (isOk(result)) {
         await loadTagsWithCounts();
         await refresh(); // Refresh sessions to update tag references
-        showSuccess('Tag excluída', sessionCount > 0 ? `Tag removida de ${sessionCount} sessões` : 'Tag excluída');
+        showSuccess('Tag deleted', sessionCount > 0 ? `Tag removed from ${sessionCount} sessions` : 'Tag deleted');
         return true;
       } else {
-        showError('Erro ao excluir tag', result.error.getUserMessage());
+        showError('Error deleting tag', result.error.getUserMessage());
         return false;
       }
     } catch (error) {
-      showError('Erro inesperado', 'Tente novamente');
+      showError('Unexpected error', 'Please try again');
       return false;
     }
   };
@@ -284,7 +284,7 @@ export function App() {
       setRestoreProgress(null);
       setIsRestoreModalOpen(true);
     } catch (error) {
-      showError('Erro inesperado', 'Tente novamente');
+      showError('Unexpected error', 'Please try again');
       console.error('Restore session error:', error);
     }
   };
@@ -317,13 +317,13 @@ export function App() {
 
         if (skippedTabs.length > 0) {
           showSuccess(
-            'Sessão restaurada',
-            `${tabsRestored} abas em ${windowsRestored} janelas (${skippedTabs.length} ignoradas)`
+            'Session restored',
+            `${tabsRestored} tabs in ${windowsRestored} windows (${skippedTabs.length} skipped)`
           );
         } else {
           showSuccess(
-            'Sessão restaurada',
-            `${tabsRestored} abas em ${windowsRestored} janelas`
+            'Session restored',
+            `${tabsRestored} tabs in ${windowsRestored} windows`
           );
         }
 
@@ -333,10 +333,10 @@ export function App() {
         setDuplicates(null);
         setRestoreProgress(null);
       } else {
-        showError('Erro ao restaurar', result.error.getUserMessage());
+        showError('Restore error', result.error.getUserMessage());
       }
     } catch (error) {
-      showError('Erro inesperado', 'Tente novamente');
+      showError('Unexpected error', 'Please try again');
       console.error('Restore session error:', error);
     } finally {
       setIsRestoring(false);
@@ -350,7 +350,7 @@ export function App() {
       setEditingSession(session);
       setIsEditModalOpen(true);
     } catch (error) {
-      showError('Erro inesperado', 'Tente novamente');
+      showError('Unexpected error', 'Please try again');
       console.error('Edit session error:', error);
     }
   };
@@ -375,14 +375,14 @@ export function App() {
 
       await db.sessions.put(updated);
 
-      showSuccess('Sessão atualizada', `"${data.name}" foi salva`);
+      showSuccess('Session updated', `"${data.name}" was saved`);
 
       // Close modal and refresh list
       setIsEditModalOpen(false);
       setEditingSession(null);
       await refresh();
     } catch (error) {
-      showError('Erro ao salvar', 'Não foi possível salvar as alterações');
+      showError('Save error', 'Unable to save changes');
       console.error('Edit session error:', error);
     } finally {
       setIsSaving(false);
@@ -400,13 +400,13 @@ export function App() {
     try {
       const result = await deleteSession(deletingSession.id);
       if (isOk(result)) {
-        showSuccess('Sessão excluída', `"${deletingSession.name}" foi removida`);
+        showSuccess('Session deleted', `"${deletingSession.name}" was removed`);
         await refresh();
       } else {
-        showError('Erro ao excluir', result.error.getUserMessage());
+        showError('Error deleting', result.error.getUserMessage());
       }
     } catch (error) {
-      showError('Erro inesperado', 'Tente novamente');
+      showError('Unexpected error', 'Please try again');
       console.error('Delete session error:', error);
     } finally {
       setIsDeleteModalOpen(false);
@@ -429,14 +429,14 @@ export function App() {
       const result = await exportSessions();
       if (isOk(result)) {
         showSuccess(
-          'Exportação concluída',
-          `${result.value.sessionCount} sessões exportadas`
+          'Export completed',
+          `${result.value.sessionCount} sessions exported`
         );
       } else {
-        showError('Erro ao exportar', result.error.getUserMessage());
+        showError('Error exporting', result.error.getUserMessage());
       }
     } catch (error) {
-      showError('Erro inesperado', 'Tente novamente');
+      showError('Unexpected error', 'Please try again');
       console.error('Export error:', error);
     } finally {
       setIsExporting(false);
@@ -449,15 +449,15 @@ export function App() {
       const result = await importSessions('merge');
       if (isOk(result)) {
         showSuccess(
-          'Importação concluída',
-          `${result.value.sessionsImported} sessões importadas`
+          'Import completed',
+          `${result.value.sessionsImported} sessions imported`
         );
         await refresh();
       } else {
-        showError('Erro ao importar', result.error.getUserMessage());
+        showError('Error importing', result.error.getUserMessage());
       }
     } catch (error) {
-      showError('Erro inesperado', 'Tente novamente');
+      showError('Unexpected error', 'Please try again');
       console.error('Import error:', error);
     } finally {
       setIsImporting(false);
@@ -541,7 +541,7 @@ export function App() {
         </div>
         <button
           className="btn btn-icon btn-secondary"
-          aria-label="Configurações"
+          aria-label="Settings"
           onClick={handleOpenTagPanel}
         >
           ⚙️

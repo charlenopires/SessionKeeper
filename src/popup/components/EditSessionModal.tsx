@@ -356,17 +356,17 @@ export function EditSessionModal({
         aria-labelledby="edit-modal-title"
       >
         <h2 id="edit-modal-title" className="modal-title text-heading">
-          Editar Sessão
-          {isDirty && <span className="dirty-indicator" title="Alterações não salvas"> *</span>}
+          Edit Session
+          {isDirty && <span className="dirty-indicator" title="Unsaved changes"> *</span>}
         </h2>
 
         {/* Counters */}
         <div className="save-modal-counters">
           <span className="save-modal-counter">
-            🪟 {totalWindows} {totalWindows === 1 ? 'janela' : 'janelas'}
+            🪟 {totalWindows} {totalWindows === 1 ? 'window' : 'windows'}
           </span>
           <span className="save-modal-counter">
-            📄 {totalTabs} {totalTabs === 1 ? 'aba' : 'abas'}
+            📄 {totalTabs} {totalTabs === 1 ? 'tab' : 'tabs'}
           </span>
         </div>
 
@@ -375,7 +375,7 @@ export function EditSessionModal({
           {windows.map((window, windowIndex) => (
             <div key={windowIndex} className="edit-modal-window">
               <div className="edit-modal-window-header text-caption text-muted">
-                Janela {windowIndex + 1} ({window.tabs.length} abas)
+                Window {windowIndex + 1} ({window.tabs.length} tabs)
               </div>
               <ul className="edit-modal-tabs">
                 {window.tabs.map((tab, tabIndex) => {
@@ -403,7 +403,7 @@ export function EditSessionModal({
                             onChange={(e) => handleUpdateTab(windowIndex, tabIndex, 'title', e.target.value)}
                             onKeyDown={handleTabKeyDown}
                             onBlur={handleFinishEditTab}
-                            placeholder="Título"
+                            placeholder="Title"
                             autoFocus
                           />
                           <input
@@ -419,7 +419,7 @@ export function EditSessionModal({
                       ) : (
                         <>
                           {tab.pinned && (
-                            <span className="tab-pin-indicator" title="Aba fixada">📌</span>
+                            <span className="tab-pin-indicator" title="Pinned tab">📌</span>
                           )}
                           {tab.favIconUrl ? (
                             <img
@@ -444,8 +444,8 @@ export function EditSessionModal({
                             type="button"
                             className="btn btn-icon btn-sm tab-remove-btn"
                             onClick={() => handleRemoveTab(windowIndex, tabIndex)}
-                            title="Remover aba"
-                            aria-label="Remover aba"
+                            title="Remove tab"
+                            aria-label="Remove tab"
                           >
                             ✕
                           </button>
@@ -459,7 +459,7 @@ export function EditSessionModal({
           ))}
           {totalTabs === 0 && (
             <p className="text-caption text-muted edit-modal-empty">
-              Nenhuma aba na sessão. Adicione pelo menos uma aba para salvar.
+              No tabs in session. Add at least one tab to save.
             </p>
           )}
         </div>
@@ -469,7 +469,7 @@ export function EditSessionModal({
           {/* Name field */}
           <div className="save-modal-field">
             <label htmlFor="edit-session-name" className="text-body-sm">
-              Nome da sessão *
+              Session name *
             </label>
             <input
               ref={nameInputRef}
@@ -486,12 +486,12 @@ export function EditSessionModal({
           {/* Description field */}
           <div className="save-modal-field">
             <label htmlFor="edit-session-description" className="text-body-sm">
-              Descrição (opcional)
+              Description (optional)
             </label>
             <textarea
               id="edit-session-description"
               className="input"
-              placeholder="Descreva o contexto desta sessão..."
+              placeholder="Describe the context of this session..."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               maxLength={500}
@@ -525,7 +525,7 @@ export function EditSessionModal({
                     ref={newTagInputRef}
                     type="text"
                     className="input input-sm"
-                    placeholder="Nova tag..."
+                    placeholder="New tag..."
                     value={newTagName}
                     onChange={(e) => setNewTagName(e.target.value)}
                     onKeyDown={handleNewTagKeyDown}
@@ -537,7 +537,7 @@ export function EditSessionModal({
                     className="btn btn-icon btn-secondary btn-sm"
                     onClick={handleCreateTag}
                     disabled={!newTagName.trim() || isCreatingTag}
-                    title="Criar tag"
+                    title="Create tag"
                   >
                     ✓
                   </button>
@@ -549,7 +549,7 @@ export function EditSessionModal({
                       setNewTagName('');
                     }}
                     disabled={isCreatingTag}
-                    title="Cancelar"
+                    title="Cancel"
                   >
                     ✕
                   </button>
@@ -560,9 +560,9 @@ export function EditSessionModal({
                   className="badge save-modal-add-tag"
                   onClick={() => setShowNewTagInput(true)}
                   disabled={isSaving}
-                  title="Criar nova tag"
+                  title="Create new tag"
                 >
-                  + Nova tag
+                  + New tag
                 </button>
               )}
             </div>
@@ -576,14 +576,14 @@ export function EditSessionModal({
             onClick={onCancel}
             disabled={isSaving}
           >
-            Cancelar
+            Cancel
           </button>
           <button
             className="btn btn-primary"
             onClick={handleSave}
             disabled={!canSave}
           >
-            {isSaving ? 'Salvando...' : 'Salvar Alterações'}
+            {isSaving ? 'Saving...' : 'Save Changes'}
           </button>
         </div>
       </div>

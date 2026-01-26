@@ -12,15 +12,15 @@ export interface ConfirmModalProps {
 }
 
 /**
- * Modal de confirmação reutilizável
- * Usado para ações destrutivas como exclusão de sessões
+ * Reusable confirmation modal
+ * Used for destructive actions like deleting sessions
  */
 export function ConfirmModal({
   isOpen,
   title,
   message,
-  confirmLabel = 'Confirmar',
-  cancelLabel = 'Cancelar',
+  confirmLabel = 'Confirm',
+  cancelLabel = 'Cancel',
   variant = 'default',
   onConfirm,
   onCancel,
@@ -134,8 +134,8 @@ export interface DeleteSessionModalProps {
 }
 
 /**
- * Modal específico para exclusão de sessões
- * Mostra nome da sessão e quantidade de abas que serão perdidas
+ * Modal for deleting sessions
+ * Shows session name and number of tabs that will be lost
  */
 export function DeleteSessionModal({
   isOpen,
@@ -144,15 +144,15 @@ export function DeleteSessionModal({
   onConfirm,
   onCancel,
 }: DeleteSessionModalProps) {
-  const tabText = totalTabs === 1 ? 'aba será perdida' : 'abas serão perdidas';
+  const tabText = totalTabs === 1 ? 'tab will be lost' : 'tabs will be lost';
 
   return (
     <ConfirmModal
       isOpen={isOpen}
-      title="Excluir sessão?"
-      message={`"${sessionName}" contém ${totalTabs} ${tabText}. Esta ação não pode ser desfeita.`}
-      confirmLabel="Excluir"
-      cancelLabel="Cancelar"
+      title="Delete session?"
+      message={`"${sessionName}" contains ${totalTabs} ${tabText}. This action cannot be undone.`}
+      confirmLabel="Delete"
+      cancelLabel="Cancel"
       variant="danger"
       onConfirm={onConfirm}
       onCancel={onCancel}
@@ -169,8 +169,8 @@ export interface DeleteTagModalProps {
 }
 
 /**
- * Modal específico para exclusão de tags
- * Mostra nome da tag e quantidade de sessões associadas
+ * Modal for deleting tags
+ * Shows tag name and number of associated sessions
  */
 export function DeleteTagModal({
   isOpen,
@@ -179,15 +179,15 @@ export function DeleteTagModal({
   onConfirm,
   onCancel,
 }: DeleteTagModalProps) {
-  const sessionText = sessionCount === 1 ? 'sessão associada' : 'sessões associadas';
+  const sessionText = sessionCount === 1 ? 'associated session' : 'associated sessions';
 
   return (
     <ConfirmModal
       isOpen={isOpen}
-      title="Excluir tag?"
-      message={`A tag "${tagName}" possui ${sessionCount} ${sessionText}. A tag será removida de todas as sessões. Esta ação não pode ser desfeita.`}
-      confirmLabel="Excluir"
-      cancelLabel="Cancelar"
+      title="Delete tag?"
+      message={`The tag "${tagName}" has ${sessionCount} ${sessionText}. The tag will be removed from all sessions. This action cannot be undone.`}
+      confirmLabel="Delete"
+      cancelLabel="Cancel"
       variant="danger"
       onConfirm={onConfirm}
       onCancel={onCancel}
@@ -204,8 +204,8 @@ export interface ImportReplaceModalProps {
 }
 
 /**
- * Modal de confirmação para substituição durante importação
- * Alerta sobre perda de sessões existentes
+ * Confirmation modal for replace during import
+ * Warns about loss of existing sessions
  */
 export function ImportReplaceModal({
   isOpen,
@@ -214,16 +214,16 @@ export function ImportReplaceModal({
   onConfirm,
   onCancel,
 }: ImportReplaceModalProps) {
-  const existingText = existingCount === 1 ? 'sessão existente será substituída' : 'sessões existentes serão substituídas';
-  const importingText = importingCount === 1 ? 'sessão do arquivo' : 'sessões do arquivo';
+  const existingText = existingCount === 1 ? 'existing session will be replaced' : 'existing sessions will be replaced';
+  const importingText = importingCount === 1 ? 'session from file' : 'sessions from file';
 
   return (
     <ConfirmModal
       isOpen={isOpen}
-      title="Substituir todas as sessões?"
-      message={`${existingCount} ${existingText} por ${importingCount} ${importingText}. Todas as sessões atuais serão permanentemente perdidas.`}
-      confirmLabel="Substituir"
-      cancelLabel="Cancelar"
+      title="Replace all sessions?"
+      message={`${existingCount} ${existingText} with ${importingCount} ${importingText}. All current sessions will be permanently lost.`}
+      confirmLabel="Replace"
+      cancelLabel="Cancel"
       variant="warning"
       onConfirm={onConfirm}
       onCancel={onCancel}

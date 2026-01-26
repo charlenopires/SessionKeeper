@@ -38,8 +38,8 @@ describe('ConfirmModal', () => {
 
   it('should use default button labels', () => {
     render(<ConfirmModal {...defaultProps} />);
-    expect(screen.getByText('Confirmar')).toBeDefined();
-    expect(screen.getByText('Cancelar')).toBeDefined();
+    expect(screen.getByText('Confirm')).toBeDefined();
+    expect(screen.getByText('Cancel')).toBeDefined();
   });
 
   it('should use custom button labels', () => {
@@ -56,13 +56,13 @@ describe('ConfirmModal', () => {
 
   it('should call onConfirm when confirm button is clicked', () => {
     render(<ConfirmModal {...defaultProps} />);
-    fireEvent.click(screen.getByText('Confirmar'));
+    fireEvent.click(screen.getByText('Confirm'));
     expect(defaultProps.onConfirm).toHaveBeenCalledTimes(1);
   });
 
   it('should call onCancel when cancel button is clicked', () => {
     render(<ConfirmModal {...defaultProps} />);
-    fireEvent.click(screen.getByText('Cancelar'));
+    fireEvent.click(screen.getByText('Cancel'));
     expect(defaultProps.onCancel).toHaveBeenCalledTimes(1);
   });
 
@@ -87,13 +87,13 @@ describe('ConfirmModal', () => {
 
   it('should apply danger variant class', () => {
     render(<ConfirmModal {...defaultProps} variant="danger" />);
-    const confirmButton = screen.getByText('Confirmar');
+    const confirmButton = screen.getByText('Confirm');
     expect(confirmButton.classList.contains('btn-danger')).toBe(true);
   });
 
   it('should apply warning variant class', () => {
     render(<ConfirmModal {...defaultProps} variant="warning" />);
-    const confirmButton = screen.getByText('Confirmar');
+    const confirmButton = screen.getByText('Confirm');
     expect(confirmButton.classList.contains('btn-warning')).toBe(true);
   });
 
@@ -127,34 +127,34 @@ describe('DeleteSessionModal', () => {
   it('should display session name and tab count', () => {
     render(<DeleteSessionModal {...defaultProps} />);
     expect(screen.getByText(/Work Session/)).toBeDefined();
-    expect(screen.getByText(/10 abas serão perdidas/)).toBeDefined();
+    expect(screen.getByText(/10 tabs will be lost/)).toBeDefined();
   });
 
   it('should use singular form for 1 tab', () => {
     render(<DeleteSessionModal {...defaultProps} totalTabs={1} />);
-    expect(screen.getByText(/1 aba será perdida/)).toBeDefined();
+    expect(screen.getByText(/1 tab will be lost/)).toBeDefined();
   });
 
   it('should have danger variant styling', () => {
     render(<DeleteSessionModal {...defaultProps} />);
-    const confirmButton = screen.getByText('Excluir');
+    const confirmButton = screen.getByText('Delete');
     expect(confirmButton.classList.contains('btn-danger')).toBe(true);
   });
 
   it('should display correct title', () => {
     render(<DeleteSessionModal {...defaultProps} />);
-    expect(screen.getByText('Excluir sessão?')).toBeDefined();
+    expect(screen.getByText('Delete session?')).toBeDefined();
   });
 
-  it('should call onConfirm when Excluir is clicked', () => {
+  it('should call onConfirm when Delete is clicked', () => {
     render(<DeleteSessionModal {...defaultProps} />);
-    fireEvent.click(screen.getByText('Excluir'));
+    fireEvent.click(screen.getByText('Delete'));
     expect(defaultProps.onConfirm).toHaveBeenCalledTimes(1);
   });
 
-  it('should call onCancel when Cancelar is clicked', () => {
+  it('should call onCancel when Cancel is clicked', () => {
     render(<DeleteSessionModal {...defaultProps} />);
-    fireEvent.click(screen.getByText('Cancelar'));
+    fireEvent.click(screen.getByText('Cancel'));
     expect(defaultProps.onCancel).toHaveBeenCalledTimes(1);
   });
 });
@@ -180,40 +180,40 @@ describe('DeleteTagModal', () => {
   it('should display tag name and session count', () => {
     render(<DeleteTagModal {...defaultProps} />);
     expect(screen.getByText(/work/)).toBeDefined();
-    expect(screen.getByText(/5 sessões associadas/)).toBeDefined();
+    expect(screen.getByText(/5 associated sessions/)).toBeDefined();
   });
 
   it('should use singular form for 1 session', () => {
     render(<DeleteTagModal {...defaultProps} sessionCount={1} />);
-    expect(screen.getByText(/1 sessão associada/)).toBeDefined();
+    expect(screen.getByText(/1 associated session/)).toBeDefined();
   });
 
   it('should have danger variant styling', () => {
     render(<DeleteTagModal {...defaultProps} />);
-    const confirmButton = screen.getByText('Excluir');
+    const confirmButton = screen.getByText('Delete');
     expect(confirmButton.classList.contains('btn-danger')).toBe(true);
   });
 
   it('should display correct title', () => {
     render(<DeleteTagModal {...defaultProps} />);
-    expect(screen.getByText('Excluir tag?')).toBeDefined();
+    expect(screen.getByText('Delete tag?')).toBeDefined();
   });
 
   it('should explain consequence of action', () => {
     render(<DeleteTagModal {...defaultProps} />);
-    expect(screen.getByText(/será removida de todas as sessões/)).toBeDefined();
-    expect(screen.getByText(/não pode ser desfeita/)).toBeDefined();
+    expect(screen.getByText(/will be removed from all sessions/)).toBeDefined();
+    expect(screen.getByText(/cannot be undone/)).toBeDefined();
   });
 
-  it('should call onConfirm when Excluir is clicked', () => {
+  it('should call onConfirm when Delete is clicked', () => {
     render(<DeleteTagModal {...defaultProps} />);
-    fireEvent.click(screen.getByText('Excluir'));
+    fireEvent.click(screen.getByText('Delete'));
     expect(defaultProps.onConfirm).toHaveBeenCalledTimes(1);
   });
 
-  it('should call onCancel when Cancelar is clicked', () => {
+  it('should call onCancel when Cancel is clicked', () => {
     render(<DeleteTagModal {...defaultProps} />);
-    fireEvent.click(screen.getByText('Cancelar'));
+    fireEvent.click(screen.getByText('Cancel'));
     expect(defaultProps.onCancel).toHaveBeenCalledTimes(1);
   });
 });
@@ -238,45 +238,45 @@ describe('ImportReplaceModal', () => {
 
   it('should display existing and importing counts', () => {
     render(<ImportReplaceModal {...defaultProps} />);
-    expect(screen.getByText(/10 sessões existentes serão substituídas/)).toBeDefined();
-    expect(screen.getByText(/5 sessões do arquivo/)).toBeDefined();
+    expect(screen.getByText(/10 existing sessions will be replaced/)).toBeDefined();
+    expect(screen.getByText(/5 sessions from file/)).toBeDefined();
   });
 
   it('should use singular form for 1 existing session', () => {
     render(<ImportReplaceModal {...defaultProps} existingCount={1} />);
-    expect(screen.getByText(/1 sessão existente será substituída/)).toBeDefined();
+    expect(screen.getByText(/1 existing session will be replaced/)).toBeDefined();
   });
 
   it('should use singular form for 1 importing session', () => {
     render(<ImportReplaceModal {...defaultProps} importingCount={1} />);
-    expect(screen.getByText(/1 sessão do arquivo/)).toBeDefined();
+    expect(screen.getByText(/1 session from file/)).toBeDefined();
   });
 
   it('should have warning variant styling', () => {
     render(<ImportReplaceModal {...defaultProps} />);
-    const confirmButton = screen.getByText('Substituir');
+    const confirmButton = screen.getByText('Replace');
     expect(confirmButton.classList.contains('btn-warning')).toBe(true);
   });
 
   it('should display correct title', () => {
     render(<ImportReplaceModal {...defaultProps} />);
-    expect(screen.getByText('Substituir todas as sessões?')).toBeDefined();
+    expect(screen.getByText('Replace all sessions?')).toBeDefined();
   });
 
   it('should explain consequence of action', () => {
     render(<ImportReplaceModal {...defaultProps} />);
-    expect(screen.getByText(/permanentemente perdidas/)).toBeDefined();
+    expect(screen.getByText(/permanently lost/)).toBeDefined();
   });
 
-  it('should call onConfirm when Substituir is clicked', () => {
+  it('should call onConfirm when Replace is clicked', () => {
     render(<ImportReplaceModal {...defaultProps} />);
-    fireEvent.click(screen.getByText('Substituir'));
+    fireEvent.click(screen.getByText('Replace'));
     expect(defaultProps.onConfirm).toHaveBeenCalledTimes(1);
   });
 
-  it('should call onCancel when Cancelar is clicked', () => {
+  it('should call onCancel when Cancel is clicked', () => {
     render(<ImportReplaceModal {...defaultProps} />);
-    fireEvent.click(screen.getByText('Cancelar'));
+    fireEvent.click(screen.getByText('Cancel'));
     expect(defaultProps.onCancel).toHaveBeenCalledTimes(1);
   });
 });
@@ -298,7 +298,7 @@ describe('ConfirmModal focus behavior', () => {
     );
 
     await waitFor(() => {
-      const cancelButton = screen.getByText('Cancelar');
+      const cancelButton = screen.getByText('Cancel');
       expect(document.activeElement).toBe(cancelButton);
     });
   });
@@ -316,7 +316,7 @@ describe('ConfirmModal focus behavior', () => {
     );
 
     await waitFor(() => {
-      const confirmButton = screen.getByText('Confirmar');
+      const confirmButton = screen.getByText('Confirm');
       expect(document.activeElement).not.toBe(confirmButton);
     });
   });
@@ -332,8 +332,8 @@ describe('ConfirmModal focus behavior', () => {
       />
     );
 
-    const cancelButton = screen.getByText('Cancelar');
-    const confirmButton = screen.getByText('Confirmar');
+    const cancelButton = screen.getByText('Cancel');
+    const confirmButton = screen.getByText('Confirm');
 
     // Wait for focus on cancel button
     await waitFor(() => {
@@ -359,7 +359,7 @@ describe('ConfirmModal focus behavior', () => {
 
     // Wait for focus on cancel button
     await waitFor(() => {
-      expect(document.activeElement).toBe(screen.getByText('Cancelar'));
+      expect(document.activeElement).toBe(screen.getByText('Cancel'));
     });
 
     // Shift+Tab should cycle to confirm button (last element)

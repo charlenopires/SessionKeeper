@@ -28,18 +28,18 @@ export function QuickActionsBar({
         className="btn btn-primary quick-action-primary"
         onClick={onSaveSession}
         disabled={!canSave || isAnyLoading}
-        title="Salvar todas as abas abertas como uma nova sessão"
-        aria-label="Salvar Sessão Atual"
+        title="Save all open tabs as a new session"
+        aria-label="Save Current Session"
       >
         {isSaving ? (
           <>
             <span className="btn-spinner">⏳</span>
-            Salvando...
+            Saving...
           </>
         ) : (
           <>
             <span className="btn-icon-left">💾</span>
-            Salvar Sessão Atual
+            Save Current Session
           </>
         )}
       </button>
@@ -50,18 +50,18 @@ export function QuickActionsBar({
           className="btn btn-secondary flex-1"
           onClick={onExport}
           disabled={!canExport || isAnyLoading}
-          title={canExport ? "Exportar todas as sessões para um arquivo JSON" : "Nenhuma sessão para exportar"}
-          aria-label="Exportar sessões"
+          title={canExport ? "Export all sessions to a JSON file" : "No sessions to export"}
+          aria-label="Export sessions"
         >
           {isExporting ? (
             <>
               <span className="btn-spinner">⏳</span>
-              Exportando...
+              Exporting...
             </>
           ) : (
             <>
               <span className="btn-icon-left">📥</span>
-              Exportar
+              Export
             </>
           )}
         </button>
@@ -70,18 +70,18 @@ export function QuickActionsBar({
           className="btn btn-secondary flex-1"
           onClick={onImport}
           disabled={isAnyLoading}
-          title="Importar sessões de um arquivo JSON"
-          aria-label="Importar sessões"
+          title="Import sessions from a JSON file"
+          aria-label="Import sessions"
         >
           {isImporting ? (
             <>
               <span className="btn-spinner">⏳</span>
-              Importando...
+              Importing...
             </>
           ) : (
             <>
               <span className="btn-icon-left">📤</span>
-              Importar
+              Import
             </>
           )}
         </button>

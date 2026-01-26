@@ -24,8 +24,8 @@ export interface UseDuplicateDetectionResult {
 }
 
 /**
- * Hook para gerenciar detecção de duplicatas antes de restaurar
- * Fornece estado de verificação, resultado e estratégia selecionada
+ * Hook to manage duplicate detection before restoring
+ * Provides checking state, result, and selected strategy
  */
 export function useDuplicateDetection(
   options: UseDuplicateDetectionOptions = {}

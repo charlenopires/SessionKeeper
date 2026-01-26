@@ -56,7 +56,7 @@ describe('SaveSessionModal', () => {
     );
 
     expect(screen.getByRole('dialog')).toBeDefined();
-    expect(screen.getByText('Salvar Sessão')).toBeDefined();
+    expect(screen.getByText('Save Session')).toBeDefined();
   });
 
   it('should show window and tab counters', () => {
@@ -70,8 +70,8 @@ describe('SaveSessionModal', () => {
       />
     );
 
-    expect(screen.getByText(/2 janelas/)).toBeDefined();
-    expect(screen.getByText(/3 abas/)).toBeDefined();
+    expect(screen.getByText(/2 windows/)).toBeDefined();
+    expect(screen.getByText(/3 tabs/)).toBeDefined();
   });
 
   it('should show preview of windows and tabs', () => {
@@ -85,8 +85,8 @@ describe('SaveSessionModal', () => {
       />
     );
 
-    expect(screen.getByText(/Janela 1/)).toBeDefined();
-    expect(screen.getByText(/Janela 2/)).toBeDefined();
+    expect(screen.getByText(/Window 1/)).toBeDefined();
+    expect(screen.getByText(/Window 2/)).toBeDefined();
     expect(screen.getByText('Example')).toBeDefined();
   });
 
@@ -101,9 +101,9 @@ describe('SaveSessionModal', () => {
       />
     );
 
-    const nameInput = screen.getByLabelText(/nome da sessão/i);
+    const nameInput = screen.getByLabelText(/session name/i);
     expect(nameInput).toBeDefined();
-    expect(nameInput.getAttribute('placeholder')).toContain('Sessão');
+    expect(nameInput.getAttribute('placeholder')).toContain('Session');
   });
 
   it('should have description textarea', () => {
@@ -117,7 +117,7 @@ describe('SaveSessionModal', () => {
       />
     );
 
-    expect(screen.getByLabelText(/descrição/i)).toBeDefined();
+    expect(screen.getByLabelText(/description/i)).toBeDefined();
   });
 
   it('should show existing tags as chips', () => {
@@ -163,7 +163,7 @@ describe('SaveSessionModal', () => {
       />
     );
 
-    expect(screen.getByText(/nova tag/i)).toBeDefined();
+    expect(screen.getByText(/new tag/i)).toBeDefined();
   });
 
   it('should show new tag input when clicking add button', () => {
@@ -177,9 +177,9 @@ describe('SaveSessionModal', () => {
       />
     );
 
-    fireEvent.click(screen.getByText(/nova tag/i));
+    fireEvent.click(screen.getByText(/new tag/i));
 
-    expect(screen.getByPlaceholderText(/nova tag/i)).toBeDefined();
+    expect(screen.getByPlaceholderText(/new tag/i)).toBeDefined();
   });
 
   it('should disable save button when name is empty', () => {
@@ -193,7 +193,7 @@ describe('SaveSessionModal', () => {
       />
     );
 
-    const saveBtn = screen.getByRole('button', { name: /salvar$/i });
+    const saveBtn = screen.getByRole('button', { name: /save$/i });
     expect(saveBtn.hasAttribute('disabled')).toBe(true);
   });
 
@@ -208,10 +208,10 @@ describe('SaveSessionModal', () => {
       />
     );
 
-    const nameInput = screen.getByLabelText(/nome da sessão/i);
+    const nameInput = screen.getByLabelText(/session name/i);
     fireEvent.change(nameInput, { target: { value: 'My Session' } });
 
-    const saveBtn = screen.getByRole('button', { name: /salvar$/i });
+    const saveBtn = screen.getByRole('button', { name: /save$/i });
     expect(saveBtn.hasAttribute('disabled')).toBe(false);
   });
 
@@ -228,12 +228,12 @@ describe('SaveSessionModal', () => {
     );
 
     // Fill name
-    fireEvent.change(screen.getByLabelText(/nome da sessão/i), {
+    fireEvent.change(screen.getByLabelText(/session name/i), {
       target: { value: 'My Session' },
     });
 
     // Fill description
-    fireEvent.change(screen.getByLabelText(/descrição/i), {
+    fireEvent.change(screen.getByLabelText(/description/i), {
       target: { value: 'Test description' },
     });
 
@@ -241,7 +241,7 @@ describe('SaveSessionModal', () => {
     fireEvent.click(screen.getByText('work'));
 
     // Save
-    fireEvent.click(screen.getByRole('button', { name: /salvar$/i }));
+    fireEvent.click(screen.getByRole('button', { name: /save$/i }));
 
     expect(onSave).toHaveBeenCalledWith({
       name: 'My Session',
@@ -262,7 +262,7 @@ describe('SaveSessionModal', () => {
       />
     );
 
-    fireEvent.click(screen.getByRole('button', { name: /cancelar/i }));
+    fireEvent.click(screen.getByRole('button', { name: /cancel/i }));
 
     expect(onCancel).toHaveBeenCalled();
   });
@@ -296,6 +296,6 @@ describe('SaveSessionModal', () => {
       />
     );
 
-    expect(screen.getByText(/salvando/i)).toBeDefined();
+    expect(screen.getByText(/saving/i)).toBeDefined();
   });
 });

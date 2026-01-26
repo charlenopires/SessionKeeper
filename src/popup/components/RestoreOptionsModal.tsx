@@ -94,7 +94,7 @@ export function RestoreOptionsModal({
         aria-labelledby="restore-modal-title"
       >
         <h2 id="restore-modal-title" className="modal-title text-heading">
-          Restaurar Sessão
+          Restore Session
         </h2>
 
         {/* Session Preview */}
@@ -105,17 +105,17 @@ export function RestoreOptionsModal({
           )}
           <div className="restore-modal-counters">
             <span className="restore-modal-counter">
-              🪟 {session.totalWindows} {session.totalWindows === 1 ? 'janela' : 'janelas'}
+              🪟 {session.totalWindows} {session.totalWindows === 1 ? 'window' : 'windows'}
             </span>
             <span className="restore-modal-counter">
-              📄 {session.totalTabs} {session.totalTabs === 1 ? 'aba' : 'abas'}
+              📄 {session.totalTabs} {session.totalTabs === 1 ? 'tab' : 'tabs'}
             </span>
           </div>
         </div>
 
         {/* Restore Target Options */}
         <div className="restore-modal-options">
-          <label className="text-body-sm">Abrir em:</label>
+          <label className="text-body-sm">Open in:</label>
           <div className="restore-modal-radio-group">
             <label className="restore-modal-radio">
               <input
@@ -126,7 +126,7 @@ export function RestoreOptionsModal({
                 onChange={() => setRestoreTarget('new-window')}
                 disabled={isRestoring}
               />
-              <span>Nova janela</span>
+              <span>New window</span>
             </label>
             <label className="restore-modal-radio">
               <input
@@ -137,7 +137,7 @@ export function RestoreOptionsModal({
                 onChange={() => setRestoreTarget('current-window')}
                 disabled={isRestoring}
               />
-              <span>Janela atual</span>
+              <span>Current window</span>
             </label>
           </div>
         </div>
@@ -147,7 +147,7 @@ export function RestoreOptionsModal({
           <div className="restore-modal-duplicates">
             <div className="restore-modal-duplicates-header">
               <span className="text-body-sm text-warning">
-                ⚠️ {duplicates.duplicateCount} {duplicates.duplicateCount === 1 ? 'aba já está aberta' : 'abas já estão abertas'}
+                ⚠️ {duplicates.duplicateCount} {duplicates.duplicateCount === 1 ? 'tab is already open' : 'tabs are already open'}
               </span>
             </div>
 
@@ -158,7 +158,7 @@ export function RestoreOptionsModal({
                 onChange={(e) => setSkipDuplicates(e.target.checked)}
                 disabled={isRestoring}
               />
-              <span>Ignorar duplicatas</span>
+              <span>Skip duplicates</span>
             </label>
 
             {/* Duplicate tabs list */}
@@ -184,7 +184,7 @@ export function RestoreOptionsModal({
               ))}
               {duplicateTabs.length > 5 && (
                 <div className="restore-modal-duplicate-more text-caption text-muted">
-                  +{duplicateTabs.length - 5} mais duplicatas
+                  +{duplicateTabs.length - 5} more duplicates
                 </div>
               )}
             </div>
@@ -201,7 +201,7 @@ export function RestoreOptionsModal({
               />
             </div>
             <div className="restore-modal-progress-text text-caption text-muted">
-              Restaurando aba {progress.currentTab} de {progress.totalTabs}...
+              Restoring tab {progress.currentTab} of {progress.totalTabs}...
             </div>
           </div>
         )}
@@ -213,14 +213,14 @@ export function RestoreOptionsModal({
             onClick={onCancel}
             disabled={isRestoring}
           >
-            Cancelar
+            Cancel
           </button>
           <button
             className="btn btn-primary"
             onClick={handleRestore}
             disabled={isRestoring}
           >
-            {isRestoring ? 'Restaurando...' : 'Restaurar'}
+            {isRestoring ? 'Restoring...' : 'Restore'}
           </button>
         </div>
       </div>

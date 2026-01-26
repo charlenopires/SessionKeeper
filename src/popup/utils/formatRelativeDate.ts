@@ -1,7 +1,7 @@
 /**
- * Formats a date as a relative time string in Portuguese
+ * Formats a date as a relative time string in English
  * @param date The date to format
- * @returns A string like "há 2 dias", "há 1 hora", etc.
+ * @returns A string like "2 days ago", "1 hour ago", etc.
  */
 export function formatRelativeDate(date: Date): string {
   const now = new Date();
@@ -14,29 +14,29 @@ export function formatRelativeDate(date: Date): string {
   const diffMonths = Math.floor(diffDays / 30);
 
   if (diffSeconds < 60) {
-    return 'agora mesmo';
+    return 'just now';
   }
 
   if (diffMinutes < 60) {
-    return diffMinutes === 1 ? 'há 1 minuto' : `há ${diffMinutes} minutos`;
+    return diffMinutes === 1 ? '1 minute ago' : `${diffMinutes} minutes ago`;
   }
 
   if (diffHours < 24) {
-    return diffHours === 1 ? 'há 1 hora' : `há ${diffHours} horas`;
+    return diffHours === 1 ? '1 hour ago' : `${diffHours} hours ago`;
   }
 
   if (diffDays < 7) {
-    return diffDays === 1 ? 'há 1 dia' : `há ${diffDays} dias`;
+    return diffDays === 1 ? '1 day ago' : `${diffDays} days ago`;
   }
 
   if (diffWeeks < 4) {
-    return diffWeeks === 1 ? 'há 1 semana' : `há ${diffWeeks} semanas`;
+    return diffWeeks === 1 ? '1 week ago' : `${diffWeeks} weeks ago`;
   }
 
   if (diffMonths < 12) {
-    return diffMonths === 1 ? 'há 1 mês' : `há ${diffMonths} meses`;
+    return diffMonths === 1 ? '1 month ago' : `${diffMonths} months ago`;
   }
 
   const diffYears = Math.floor(diffMonths / 12);
-  return diffYears === 1 ? 'há 1 ano' : `há ${diffYears} anos`;
+  return diffYears === 1 ? '1 year ago' : `${diffYears} years ago`;
 }

@@ -91,7 +91,7 @@ export function Toast({ toast, onDismiss }: ToastProps) {
       <button
         type="button"
         onClick={handleDismiss}
-        aria-label="Fechar notificação"
+        aria-label="Close notification"
         style={{
           background: 'transparent',
           border: 'none',
@@ -175,11 +175,11 @@ export function useToast() {
    * Shows session saved feedback with name and counters
    */
   const showSessionSaved = (sessionName: string, totalTabs: number, totalWindows: number) => {
-    const windowText = totalWindows === 1 ? 'janela' : 'janelas';
-    const tabText = totalTabs === 1 ? 'aba' : 'abas';
+    const windowText = totalWindows === 1 ? 'window' : 'windows';
+    const tabText = totalTabs === 1 ? 'tab' : 'tabs';
     return showSuccess(
-      `"${sessionName}" salva`,
-      `${totalTabs} ${tabText} em ${totalWindows} ${windowText}`
+      `"${sessionName}" saved`,
+      `${totalTabs} ${tabText} in ${totalWindows} ${windowText}`
     );
   };
 

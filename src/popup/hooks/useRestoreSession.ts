@@ -18,8 +18,8 @@ export interface UseRestoreSessionResult {
 }
 
 /**
- * Hook para gerenciar restauração de sessões
- * Fornece estado de progresso e callbacks de resultado
+ * Hook to manage session restoration
+ * Provides progress state and result callbacks
  */
 export function useRestoreSession(
   options: UseRestoreSessionOptions = {}

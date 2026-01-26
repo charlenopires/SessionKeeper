@@ -53,15 +53,15 @@ describe('SessionList', () => {
   it('should render empty state when no sessions', () => {
     render(<SessionList sessions={[]} />);
 
-    expect(screen.getByText('Nenhuma sessão salva')).toBeDefined();
-    expect(screen.getByText(/Salve sua primeira sessão/)).toBeDefined();
+    expect(screen.getByText('No saved sessions')).toBeDefined();
+    expect(screen.getByText(/Save your first session/)).toBeDefined();
   });
 
   it('should render CTA button in empty state', () => {
     const onSaveFirst = mock(() => {});
     render(<SessionList sessions={[]} onSaveFirst={onSaveFirst} />);
 
-    const ctaButton = screen.getByRole('button', { name: /salvar sessão atual/i });
+    const ctaButton = screen.getByRole('button', { name: /save current session/i });
     expect(ctaButton).toBeDefined();
 
     fireEvent.click(ctaButton);
@@ -71,7 +71,7 @@ describe('SessionList', () => {
   it('should render loading state', () => {
     render(<SessionList sessions={[]} isLoading={true} />);
 
-    expect(screen.getByText(/carregando/i)).toBeDefined();
+    expect(screen.getByText(/loading/i)).toBeDefined();
   });
 
   it('should pass onRestore to cards', () => {
@@ -81,7 +81,7 @@ describe('SessionList', () => {
     const firstCard = screen.getByText('Session 1').closest('article');
     fireEvent.mouseEnter(firstCard!);
 
-    const restoreBtn = screen.getAllByRole('button', { name: /restaurar/i })[0];
+    const restoreBtn = screen.getAllByRole('button', { name: /restore/i })[0];
     fireEvent.click(restoreBtn);
 
     expect(onRestore).toHaveBeenCalledWith(mockSessions[0]);
@@ -94,7 +94,7 @@ describe('SessionList', () => {
     const firstCard = screen.getByText('Session 1').closest('article');
     fireEvent.mouseEnter(firstCard!);
 
-    const deleteBtn = screen.getAllByRole('button', { name: /excluir/i })[0];
+    const deleteBtn = screen.getAllByRole('button', { name: /delete/i })[0];
     fireEvent.click(deleteBtn);
 
     expect(onDelete).toHaveBeenCalledWith(mockSessions[0]);

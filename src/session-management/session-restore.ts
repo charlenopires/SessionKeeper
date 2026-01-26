@@ -17,7 +17,7 @@ function checkChromeApiAvailable(): SessionRestoreError | null {
     return new SessionRestoreError(
       'Chrome API not available',
       undefined,
-      'API do Chrome não está disponível. Esta funcionalidade requer um ambiente de extensão do Chrome.'
+      'Chrome API is not available. This feature requires a Chrome extension environment.'
     );
   }
 
@@ -25,7 +25,7 @@ function checkChromeApiAvailable(): SessionRestoreError | null {
     return new SessionRestoreError(
       'chrome.windows API not available',
       undefined,
-      'API de janelas do Chrome não está disponível. Verifique as permissões da extensão.'
+      'Chrome windows API is not available. Check extension permissions.'
     );
   }
 
@@ -33,7 +33,7 @@ function checkChromeApiAvailable(): SessionRestoreError | null {
     return new SessionRestoreError(
       'chrome.tabs API not available',
       undefined,
-      'API de abas do Chrome não está disponível. Verifique as permissões da extensão.'
+      'Chrome tabs API is not available. Check extension permissions.'
     );
   }
 
@@ -53,7 +53,7 @@ async function withTimeout<T>(
 
   const timeoutPromise = new Promise<never>((_, reject) => {
     timeoutId = setTimeout(() => {
-      reject(new Error(`Timeout: ${operation} excedeu ${timeoutMs / 1000}s`));
+      reject(new Error(`Timeout: ${operation} exceeded ${timeoutMs / 1000}s`));
     }, timeoutMs);
   });
 
@@ -72,7 +72,7 @@ async function withTimeout<T>(
  */
 export class SessionRestoreError extends SessionManagementError {
   constructor(message: string, cause?: unknown, userMessage?: string) {
-    super(message, cause, userMessage || 'Falha ao restaurar sessão. Tente novamente.');
+    super(message, cause, userMessage || 'Failed to restore session. Please try again.');
     this.name = 'SessionRestoreError';
   }
 }
@@ -170,7 +170,7 @@ export async function restoreToNewWindows(
           skippedTabs.push({
             tab: tabs[i],
             windowId: windowSnapshot.windowId,
-            reason: validation.reason || 'URL inválida',
+            reason: validation.reason || 'Invalid URL',
           });
           tabsProcessed++;
           onProgress?.({
@@ -193,7 +193,7 @@ export async function restoreToNewWindows(
           focused: windowIndex === 0, // Focus only the first window
         }),
         TAB_CREATION_TIMEOUT_MS,
-        'criação de janela'
+        'window creation'
       );
 
       if (!newWindow.id) {
@@ -228,7 +228,7 @@ export async function restoreToNewWindows(
           skippedTabs.push({
             tab,
             windowId: windowSnapshot.windowId,
-            reason: validation.reason || 'URL inválida',
+            reason: validation.reason || 'Invalid URL',
           });
           tabsProcessed++;
           onProgress?.({
@@ -251,7 +251,7 @@ export async function restoreToNewWindows(
               active: false,
             }),
             TAB_CREATION_TIMEOUT_MS,
-            'criação de aba'
+            'tab creation'
           );
 
           tabIndex++;
@@ -260,7 +260,7 @@ export async function restoreToNewWindows(
           skippedTabs.push({
             tab,
             windowId: windowSnapshot.windowId,
-            reason: `Falha ao criar aba: ${tabError instanceof Error ? tabError.message : 'Erro desconhecido'}`,
+            reason: `Failed to create tab: ${tabError instanceof Error ? tabError.message : 'Unknown error'}`,
           });
         }
 
@@ -343,7 +343,7 @@ export async function restoreToCurrentWindow(
         skippedTabs.push({
           tab,
           windowId: firstWindowSnapshot.windowId,
-          reason: validation.reason || 'URL inválida',
+          reason: validation.reason || 'Invalid URL',
         });
         tabsProcessed++;
         onProgress?.({
@@ -365,7 +365,7 @@ export async function restoreToCurrentWindow(
             active: false,
           }),
           TAB_CREATION_TIMEOUT_MS,
-          'criação de aba'
+          'tab creation'
         );
 
         tabsRestored++;
@@ -373,7 +373,7 @@ export async function restoreToCurrentWindow(
         skippedTabs.push({
           tab,
           windowId: firstWindowSnapshot.windowId,
-          reason: `Falha ao criar aba: ${tabError instanceof Error ? tabError.message : 'Erro desconhecido'}`,
+          reason: `Failed to create tab: ${tabError instanceof Error ? tabError.message : 'Unknown error'}`,
         });
       }
 
@@ -409,7 +409,7 @@ export async function restoreToCurrentWindow(
           skippedTabs.push({
             tab: tabs[i],
             windowId: windowSnapshot.windowId,
-            reason: validation.reason || 'URL inválida',
+            reason: validation.reason || 'Invalid URL',
           });
           tabsProcessed++;
           onProgress?.({
@@ -432,7 +432,7 @@ export async function restoreToCurrentWindow(
           focused: false,
         }),
         TAB_CREATION_TIMEOUT_MS,
-        'criação de janela'
+        'window creation'
       );
 
       if (!newWindow.id) {
@@ -466,7 +466,7 @@ export async function restoreToCurrentWindow(
           skippedTabs.push({
             tab,
             windowId: windowSnapshot.windowId,
-            reason: validation.reason || 'URL inválida',
+            reason: validation.reason || 'Invalid URL',
           });
           tabsProcessed++;
           onProgress?.({
@@ -489,7 +489,7 @@ export async function restoreToCurrentWindow(
               active: false,
             }),
             TAB_CREATION_TIMEOUT_MS,
-            'criação de aba'
+            'tab creation'
           );
 
           tabIndex++;
@@ -498,7 +498,7 @@ export async function restoreToCurrentWindow(
           skippedTabs.push({
             tab,
             windowId: windowSnapshot.windowId,
-            reason: `Falha ao criar aba: ${tabError instanceof Error ? tabError.message : 'Erro desconhecido'}`,
+            reason: `Failed to create tab: ${tabError instanceof Error ? tabError.message : 'Unknown error'}`,
           });
         }
 

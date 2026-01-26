@@ -100,12 +100,12 @@ export function SearchFilterBar({
   // Results counter text
   const getResultsText = () => {
     if (totalSessions === 0) {
-      return '0 sessões';
+      return '0 sessions';
     }
     if (isFiltered) {
-      return `${filteredCount} de ${totalSessions} sessões`;
+      return `${filteredCount} of ${totalSessions} sessions`;
     }
-    return `${totalSessions} ${totalSessions === 1 ? 'sessão' : 'sessões'}`;
+    return `${totalSessions} ${totalSessions === 1 ? 'session' : 'sessions'}`;
   };
 
   return (
@@ -117,17 +117,17 @@ export function SearchFilterBar({
           ref={inputRef}
           type="text"
           className="input search-input"
-          placeholder="Buscar sessões..."
+          placeholder="Search sessions..."
           value={localSearchTerm}
           onChange={handleSearchInput}
-          aria-label="Buscar sessões"
+          aria-label="Search sessions"
         />
         {hasActiveFilters && (
           <button
             className="btn btn-icon btn-sm search-clear-btn"
             onClick={handleClearAll}
-            aria-label="Limpar busca e filtros"
-            title="Limpar"
+            aria-label="Clear search and filters"
+            title="Clear"
           >
             ✕
           </button>
@@ -150,7 +150,7 @@ export function SearchFilterBar({
           </button>
 
           {isTagDropdownOpen && (
-            <div className="tag-filter-dropdown" role="listbox" aria-label="Filtrar por tags">
+            <div className="tag-filter-dropdown" role="listbox" aria-label="Filter by tags">
               {tags.map((tag) => {
                 const isSelected = selectedTags.includes(tag.name);
                 return (
@@ -185,7 +185,7 @@ export function SearchFilterBar({
                 key={tagName}
                 className="selected-tag-chip"
                 onClick={() => handleTagToggle(tagName)}
-                aria-label={`Remover filtro ${tagName}`}
+                aria-label={`Remove filter ${tagName}`}
                 style={{
                   borderColor: tag?.color || '#9E9E9E',
                   backgroundColor: `${tag?.color || '#9E9E9E'}20`,
@@ -219,13 +219,13 @@ export function SearchEmptyState({ onClear }: { onClear: () => void }) {
     <div className="search-empty-state">
       <div className="empty-illustration">🔍</div>
       <h3 className="text-body" style={{ fontWeight: 500 }}>
-        Nenhuma sessão encontrada
+        No sessions found
       </h3>
       <p className="text-body-sm text-muted">
-        Tente ajustar os termos de busca ou filtros
+        Try adjusting your search terms or filters
       </p>
       <button className="btn btn-secondary" onClick={onClear}>
-        Limpar Filtros
+        Clear Filters
       </button>
     </div>
   );

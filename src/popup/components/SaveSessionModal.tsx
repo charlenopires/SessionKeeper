@@ -31,7 +31,7 @@ function truncateText(text: string, maxLength: number): string {
  */
 function generateSuggestedName(): string {
   const now = new Date();
-  return `Sessão ${now.toLocaleDateString('pt-BR')} ${now.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}`;
+  return `Session ${now.toLocaleDateString('en-US')} ${now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}`;
 }
 
 export function SaveSessionModal({
@@ -165,16 +165,16 @@ export function SaveSessionModal({
         aria-labelledby="save-modal-title"
       >
         <h2 id="save-modal-title" className="modal-title text-heading">
-          Salvar Sessão
+          Save Session
         </h2>
 
         {/* Counters */}
         <div className="save-modal-counters">
           <span className="save-modal-counter">
-            🪟 {totalWindows} {totalWindows === 1 ? 'janela' : 'janelas'}
+            🪟 {totalWindows} {totalWindows === 1 ? 'window' : 'windows'}
           </span>
           <span className="save-modal-counter">
-            📄 {totalTabs} {totalTabs === 1 ? 'aba' : 'abas'}
+            📄 {totalTabs} {totalTabs === 1 ? 'tab' : 'tabs'}
           </span>
         </div>
 
@@ -183,7 +183,7 @@ export function SaveSessionModal({
           {windows.map((window, windowIndex) => (
             <div key={windowIndex} className="save-modal-window">
               <div className="save-modal-window-header text-caption text-muted">
-                Janela {windowIndex + 1} ({window.tabs.length} abas)
+                Window {windowIndex + 1} ({window.tabs.length} tabs)
               </div>
               <ul className="save-modal-tabs">
                 {window.tabs.slice(0, 5).map((tab, tabIndex) => (
@@ -207,7 +207,7 @@ export function SaveSessionModal({
                 ))}
                 {window.tabs.length > 5 && (
                   <li className="save-modal-tab-more text-caption text-muted">
-                    +{window.tabs.length - 5} mais abas
+                    +{window.tabs.length - 5} more tabs
                   </li>
                 )}
               </ul>
@@ -220,7 +220,7 @@ export function SaveSessionModal({
           {/* Name field */}
           <div className="save-modal-field">
             <label htmlFor="session-name" className="text-body-sm">
-              Nome da sessão *
+              Session name *
             </label>
             <input
               ref={nameInputRef}
@@ -238,12 +238,12 @@ export function SaveSessionModal({
           {/* Description field */}
           <div className="save-modal-field">
             <label htmlFor="session-description" className="text-body-sm">
-              Descrição (opcional)
+              Description (optional)
             </label>
             <textarea
               id="session-description"
               className="input"
-              placeholder="Descreva o contexto desta sessão..."
+              placeholder="Describe the context of this session..."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               maxLength={500}
@@ -277,7 +277,7 @@ export function SaveSessionModal({
                     ref={newTagInputRef}
                     type="text"
                     className="input input-sm"
-                    placeholder="Nova tag..."
+                    placeholder="New tag..."
                     value={newTagName}
                     onChange={(e) => setNewTagName(e.target.value)}
                     onKeyDown={handleNewTagKeyDown}
@@ -289,7 +289,7 @@ export function SaveSessionModal({
                     className="btn btn-icon btn-secondary btn-sm"
                     onClick={handleCreateTag}
                     disabled={!newTagName.trim() || isCreatingTag}
-                    title="Criar tag"
+                    title="Create tag"
                   >
                     ✓
                   </button>
@@ -301,7 +301,7 @@ export function SaveSessionModal({
                       setNewTagName('');
                     }}
                     disabled={isCreatingTag}
-                    title="Cancelar"
+                    title="Cancel"
                   >
                     ✕
                   </button>
@@ -312,9 +312,9 @@ export function SaveSessionModal({
                   className="badge save-modal-add-tag"
                   onClick={() => setShowNewTagInput(true)}
                   disabled={isSaving}
-                  title="Criar nova tag"
+                  title="Create new tag"
                 >
-                  + Nova tag
+                  + New tag
                 </button>
               )}
             </div>
@@ -328,14 +328,14 @@ export function SaveSessionModal({
             onClick={onCancel}
             disabled={isSaving}
           >
-            Cancelar
+            Cancel
           </button>
           <button
             className="btn btn-primary"
             onClick={handleSave}
             disabled={!canSave}
           >
-            {isSaving ? 'Salvando...' : 'Salvar'}
+            {isSaving ? 'Saving...' : 'Save'}
           </button>
         </div>
       </div>

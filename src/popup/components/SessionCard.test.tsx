@@ -52,7 +52,7 @@ describe('SessionCard', () => {
 
   it('should render relative date', () => {
     render(<SessionCard session={mockSession} />);
-    expect(screen.getByText('agora mesmo')).toBeDefined();
+    expect(screen.getByText('just now')).toBeDefined();
   });
 
   it('should show action buttons on hover', () => {
@@ -61,9 +61,9 @@ describe('SessionCard', () => {
     const card = container.querySelector('article')!;
     fireEvent.mouseEnter(card);
 
-    expect(screen.getByRole('button', { name: /restaurar/i })).toBeDefined();
-    expect(screen.getByRole('button', { name: /editar/i })).toBeDefined();
-    expect(screen.getByRole('button', { name: /excluir/i })).toBeDefined();
+    expect(screen.getByRole('button', { name: /restore/i })).toBeDefined();
+    expect(screen.getByRole('button', { name: /edit/i })).toBeDefined();
+    expect(screen.getByRole('button', { name: /delete/i })).toBeDefined();
   });
 
   it('should expand preview on click', () => {
@@ -72,7 +72,7 @@ describe('SessionCard', () => {
     const card = container.querySelector('article')!;
     fireEvent.click(card);
 
-    expect(screen.getByText(/Janela 1/)).toBeDefined();
+    expect(screen.getByText(/Window 1/)).toBeDefined();
     expect(screen.getByText('Example')).toBeDefined();
     expect(screen.getByText('Test Page')).toBeDefined();
   });
@@ -83,7 +83,7 @@ describe('SessionCard', () => {
     const card = container.querySelector('article')!;
     fireEvent.click(card);
 
-    expect(screen.getByTitle('Aba fixada')).toBeDefined();
+    expect(screen.getByTitle('Pinned tab')).toBeDefined();
   });
 
   it('should call onRestore when restore button clicked', () => {
@@ -93,7 +93,7 @@ describe('SessionCard', () => {
     const card = container.querySelector('article')!;
     fireEvent.mouseEnter(card);
 
-    const restoreBtn = screen.getByRole('button', { name: /restaurar/i });
+    const restoreBtn = screen.getByRole('button', { name: /restore/i });
     fireEvent.click(restoreBtn);
 
     expect(onRestore).toHaveBeenCalledWith(mockSession);
@@ -106,7 +106,7 @@ describe('SessionCard', () => {
     const card = container.querySelector('article')!;
     fireEvent.mouseEnter(card);
 
-    const deleteBtn = screen.getByRole('button', { name: /excluir/i });
+    const deleteBtn = screen.getByRole('button', { name: /delete/i });
     fireEvent.click(deleteBtn);
 
     expect(onDelete).toHaveBeenCalledWith(mockSession);
@@ -119,7 +119,7 @@ describe('SessionCard', () => {
     const card = container.querySelector('article')!;
     fireEvent.mouseEnter(card);
 
-    const editBtn = screen.getByRole('button', { name: /editar/i });
+    const editBtn = screen.getByRole('button', { name: /edit/i });
     fireEvent.click(editBtn);
 
     expect(onEdit).toHaveBeenCalledWith(mockSession);

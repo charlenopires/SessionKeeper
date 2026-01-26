@@ -24,13 +24,13 @@ describe('App - Popup Layout', () => {
     expect(screen.getByText('Session Keeper')).toBeDefined();
 
     // Check settings button exists
-    expect(screen.getByRole('button', { name: /configurações/i })).toBeDefined();
+    expect(screen.getByRole('button', { name: /settings/i })).toBeDefined();
 
     // Check main content area exists
     expect(screen.getByRole('main')).toBeDefined();
 
     // Check quick actions bar exists
-    expect(screen.getByRole('button', { name: /salvar sessão atual/i })).toBeDefined();
+    expect(screen.getByRole('button', { name: /save current session/i })).toBeDefined();
   });
 
   it('should have header with logo, title and settings button', () => {
@@ -46,15 +46,15 @@ describe('App - Popup Layout', () => {
     expect(screen.getByText('📑')).toBeDefined();
 
     // Settings button
-    expect(screen.getByRole('button', { name: /configurações/i })).toBeDefined();
+    expect(screen.getByRole('button', { name: /settings/i })).toBeDefined();
   });
 
   it('should have quick actions bar with save, export and import buttons', () => {
     render(<App />);
 
-    expect(screen.getByRole('button', { name: /salvar sessão atual/i })).toBeDefined();
-    expect(screen.getByRole('button', { name: /exportar/i })).toBeDefined();
-    expect(screen.getByRole('button', { name: /importar/i })).toBeDefined();
+    expect(screen.getByRole('button', { name: /save current session/i })).toBeDefined();
+    expect(screen.getByRole('button', { name: /export/i })).toBeDefined();
+    expect(screen.getByRole('button', { name: /import/i })).toBeDefined();
   });
 
   it('should have main area for content', () => {

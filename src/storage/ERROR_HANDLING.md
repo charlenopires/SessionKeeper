@@ -1,10 +1,10 @@
 # Error Handling
 
-O SessionKeeper implementa um sistema robusto de tratamento de erros para garantir que o usuário sempre receba mensagens claras sobre problemas.
+SessionKeeper implements a robust error handling system to ensure users always receive clear messages about problems.
 
-## Arquitetura
+## Architecture
 
-### Hierarquia de Erros
+### Error Hierarchy
 
 ```
 DatabaseError (base)
@@ -16,63 +16,63 @@ DatabaseError (base)
 
 ### DatabaseError (Base)
 
-Erro base que contém:
-- `message`: Mensagem técnica para logs
-- `cause`: Erro original que causou o problema
-- `userMessage`: Mensagem amigável para exibir ao usuário
+Base error containing:
+- `message`: Technical message for logs
+- `cause`: Original error that caused the problem
+- `userMessage`: Friendly message to display to user
 
-### Tipos de Erros
+### Error Types
 
 #### DatabaseInitializationError
 
-Quando o banco de dados não pode ser inicializado.
+When the database cannot be initialized.
 
-**Mensagem ao usuário:**
+**User message:**
 > Failed to initialize SessionKeeper database. Please ensure your browser supports IndexedDB and you have sufficient storage space.
 
-**Causas comuns:**
-- IndexedDB não disponível no contexto
-- Permissões de storage negadas
-- Modo privado com storage desabilitado
+**Common causes:**
+- IndexedDB not available in context
+- Storage permissions denied
+- Private mode with storage disabled
 
 #### DatabaseNotInitializedError
 
-Quando tentam acessar o database antes da inicialização.
+When trying to access the database before initialization.
 
-**Mensagem ao usuário:**
+**User message:**
 > Database has not been initialized. Please wait for the extension to start.
 
-**Causas comuns:**
-- Chamada a `getDatabase()` antes de `initializeDatabase()`
-- Race condition no startup
+**Common causes:**
+- Call to `getDatabase()` before `initializeDatabase()`
+- Race condition on startup
 
 #### DatabaseVersionError
 
-Conflito de versão do schema.
+Schema version conflict.
 
-**Mensagem ao usuário:**
+**User message:**
 > Database version conflict detected. Please try disabling and re-enabling the extension.
 
-**Causas comuns:**
-- Downgrade de versão da extensão
-- Corrupção do metadata do database
-- Cache inconsistente do browser
+**Common causes:**
+- Extension version downgrade
+- Database metadata corruption
+- Inconsistent browser cache
 
 #### QuotaExceededError
 
-Limite de armazenamento excedido.
+Storage limit exceeded.
 
-**Mensagem ao usuário:**
+**User message:**
 > Storage quota exceeded. Please free up space by removing old sessions or increasing browser storage limits.
 
-**Causas comuns:**
-- Muitas sessões salvas
-- Tabs com URLs muito longas
-- Limite de quota do browser atingido
+**Common causes:**
+- Too many saved sessions
+- Tabs with very long URLs
+- Browser quota limit reached
 
-## Como Usar
+## How to Use
 
-### Capturando Erros
+### Catching Errors
 
 ```typescript
 import { initializeDatabase, isDatabaseError, getErrorMessage } from './storage';
@@ -81,11 +81,11 @@ try {
   await initializeDatabase();
 } catch (error) {
   if (isDatabaseError(error)) {
-    // Erro específico do database
+    // Database-specific error
     console.error('Database error:', error.message);
     showUserMessage(error.getUserMessage());
   } else {
-    // Erro genérico
+    // Generic error
     const { technical, user } = getErrorMessage(error);
     console.error('Unexpected error:', technical);
     showUserMessage(user);
@@ -93,7 +93,7 @@ try {
 }
 ```
 
-### Lançando Erros Customizados
+### Throwing Custom Errors
 
 ```typescript
 import { QuotaExceededError } from './storage/errors';
@@ -112,18 +112,18 @@ async function saveSession(session: Session) {
 
 ### Helper getErrorMessage()
 
-Extrai mensagens técnicas e user-friendly de qualquer erro:
+Extracts technical and user-friendly messages from any error:
 
 ```typescript
 const { technical, user } = getErrorMessage(error);
 
-console.error('Technical:', technical);  // Para logs
-alert(user);  // Para o usuário
+console.error('Technical:', technical);  // For logs
+alert(user);  // For the user
 ```
 
-## Notificações
+## Notifications
 
-O service worker exibe notificações do Chrome em caso de erro:
+The service worker displays Chrome notifications on error:
 
 ```typescript
 chrome.notifications.create({
@@ -131,30 +131,30 @@ chrome.notifications.create({
   iconUrl: 'icons/icon48.png',
   title: 'SessionKeeper Error',
   message: error.getUserMessage(),
-  priority: 2,  // Alta prioridade para erros
+  priority: 2,  // High priority for errors
 });
 ```
 
-## Boas Práticas
+## Best Practices
 
-### ✅ Faça
+### ✅ Do
 
-- Sempre capture erros em operações assíncronas
-- Use `getErrorMessage()` para extrair mensagens
-- Log mensagens técnicas no console
-- Exiba apenas mensagens user-friendly ao usuário
-- Use tipos de erro específicos quando apropriado
+- Always catch errors in asynchronous operations
+- Use `getErrorMessage()` to extract messages
+- Log technical messages to console
+- Display only user-friendly messages to users
+- Use specific error types when appropriate
 
-### ❌ Não faça
+### ❌ Don't
 
-- Nunca mostre stack traces ao usuário
-- Não ignore erros silenciosamente
-- Não faça throw de strings (use Error objects)
-- Não exponha detalhes técnicos sensíveis
+- Never show stack traces to users
+- Don't ignore errors silently
+- Don't throw strings (use Error objects)
+- Don't expose sensitive technical details
 
-## Testando
+## Testing
 
-Execute os testes de erro:
+Run error tests:
 
 ```bash
 bun test src/storage/errors.test.ts
@@ -162,11 +162,11 @@ bun test src/storage/errors.test.ts
 
 ## Logging
 
-Erros são logados com contexto completo:
+Errors are logged with full context:
 
 ```typescript
 console.error('Failed to initialize:', technical, error);
-//                                      ^message  ^objeto completo
+//                                      ^message  ^full object
 ```
 
-Isso permite debugging no DevTools mantendo mensagens limpas para o usuário.
+This allows debugging in DevTools while keeping messages clean for users.

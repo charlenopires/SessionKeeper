@@ -97,7 +97,7 @@ describe('RestoreOptionsModal', () => {
     );
 
     expect(screen.getByRole('dialog')).toBeDefined();
-    expect(screen.getByText('Restaurar Sessão')).toBeDefined();
+    expect(screen.getByText('Restore Session')).toBeDefined();
   });
 
   it('should show session preview with name and counters', () => {
@@ -112,8 +112,8 @@ describe('RestoreOptionsModal', () => {
     );
 
     expect(screen.getByText('Test Session')).toBeDefined();
-    expect(screen.getByText(/2 janelas/)).toBeDefined();
-    expect(screen.getByText(/3 abas/)).toBeDefined();
+    expect(screen.getByText(/2 windows/)).toBeDefined();
+    expect(screen.getByText(/3 tabs/)).toBeDefined();
   });
 
   it('should have radio buttons with New window selected by default', () => {
@@ -127,8 +127,8 @@ describe('RestoreOptionsModal', () => {
       />
     );
 
-    const newWindowRadio = screen.getByLabelText('Nova janela') as HTMLInputElement;
-    const currentWindowRadio = screen.getByLabelText('Janela atual') as HTMLInputElement;
+    const newWindowRadio = screen.getByLabelText('New window') as HTMLInputElement;
+    const currentWindowRadio = screen.getByLabelText('Current window') as HTMLInputElement;
 
     expect(newWindowRadio.checked).toBe(true);
     expect(currentWindowRadio.checked).toBe(false);
@@ -145,7 +145,7 @@ describe('RestoreOptionsModal', () => {
       />
     );
 
-    const currentWindowRadio = screen.getByLabelText('Janela atual') as HTMLInputElement;
+    const currentWindowRadio = screen.getByLabelText('Current window') as HTMLInputElement;
     fireEvent.click(currentWindowRadio);
 
     expect(currentWindowRadio.checked).toBe(true);
@@ -162,8 +162,8 @@ describe('RestoreOptionsModal', () => {
       />
     );
 
-    expect(screen.queryByText(/já está aberta/)).toBeNull();
-    expect(screen.queryByText('Ignorar duplicatas')).toBeNull();
+    expect(screen.queryByText(/already open/)).toBeNull();
+    expect(screen.queryByText('Skip duplicates')).toBeNull();
   });
 
   it('should show duplicates section when duplicates exist', () => {
@@ -177,11 +177,11 @@ describe('RestoreOptionsModal', () => {
       />
     );
 
-    expect(screen.getByText(/1 aba já está aberta/)).toBeDefined();
-    expect(screen.getByText('Ignorar duplicatas')).toBeDefined();
+    expect(screen.getByText(/1 tab is already open/)).toBeDefined();
+    expect(screen.getByText('Skip duplicates')).toBeDefined();
   });
 
-  it('should have Ignorar duplicatas checkbox checked by default', () => {
+  it('should have Skip duplicates checkbox checked by default', () => {
     render(
       <RestoreOptionsModal
         isOpen={true}
@@ -192,7 +192,7 @@ describe('RestoreOptionsModal', () => {
       />
     );
 
-    const checkbox = screen.getByLabelText('Ignorar duplicatas') as HTMLInputElement;
+    const checkbox = screen.getByLabelText('Skip duplicates') as HTMLInputElement;
     expect(checkbox.checked).toBe(true);
   });
 
@@ -222,7 +222,7 @@ describe('RestoreOptionsModal', () => {
       />
     );
 
-    fireEvent.click(screen.getByRole('button', { name: /^restaurar$/i }));
+    fireEvent.click(screen.getByRole('button', { name: /^restore$/i }));
 
     expect(onRestore).toHaveBeenCalledWith('new-window', true);
   });
@@ -239,8 +239,8 @@ describe('RestoreOptionsModal', () => {
       />
     );
 
-    fireEvent.click(screen.getByLabelText('Janela atual'));
-    fireEvent.click(screen.getByRole('button', { name: /^restaurar$/i }));
+    fireEvent.click(screen.getByLabelText('Current window'));
+    fireEvent.click(screen.getByRole('button', { name: /^restore$/i }));
 
     expect(onRestore).toHaveBeenCalledWith('current-window', true);
   });
@@ -257,8 +257,8 @@ describe('RestoreOptionsModal', () => {
       />
     );
 
-    fireEvent.click(screen.getByLabelText('Ignorar duplicatas'));
-    fireEvent.click(screen.getByRole('button', { name: /^restaurar$/i }));
+    fireEvent.click(screen.getByLabelText('Skip duplicates'));
+    fireEvent.click(screen.getByRole('button', { name: /^restore$/i }));
 
     expect(onRestore).toHaveBeenCalledWith('new-window', false);
   });
@@ -275,7 +275,7 @@ describe('RestoreOptionsModal', () => {
       />
     );
 
-    fireEvent.click(screen.getByRole('button', { name: /cancelar/i }));
+    fireEvent.click(screen.getByRole('button', { name: /cancel/i }));
 
     expect(onCancel).toHaveBeenCalled();
   });
@@ -309,7 +309,7 @@ describe('RestoreOptionsModal', () => {
       />
     );
 
-    expect(screen.getByText(/restaurando/i)).toBeDefined();
+    expect(screen.getByText(/restoring/i)).toBeDefined();
   });
 
   it('should show progress bar when restoring', () => {
@@ -331,7 +331,7 @@ describe('RestoreOptionsModal', () => {
       />
     );
 
-    expect(screen.getByText(/Restaurando aba 2 de 5/)).toBeDefined();
+    expect(screen.getByText(/Restoring tab 2 of 5/)).toBeDefined();
 
     const progressFill = container.querySelector('.restore-modal-progress-fill');
     expect(progressFill).toBeDefined();
@@ -350,8 +350,8 @@ describe('RestoreOptionsModal', () => {
       />
     );
 
-    const restoreBtn = screen.getByRole('button', { name: /restaurando/i });
-    const cancelBtn = screen.getByRole('button', { name: /cancelar/i });
+    const restoreBtn = screen.getByRole('button', { name: /restoring/i });
+    const cancelBtn = screen.getByRole('button', { name: /cancel/i });
 
     expect(restoreBtn.hasAttribute('disabled')).toBe(true);
     expect(cancelBtn.hasAttribute('disabled')).toBe(true);

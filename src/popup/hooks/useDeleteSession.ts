@@ -18,8 +18,8 @@ export interface UseDeleteSessionResult {
 }
 
 /**
- * Hook para gerenciar o fluxo de exclusão de sessões
- * Controla o estado do modal e executa a exclusão
+ * Hook to manage the session deletion flow
+ * Controls modal state and executes deletion
  */
 export function useDeleteSession(
   options: UseDeleteSessionOptions = {}

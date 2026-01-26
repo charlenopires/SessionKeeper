@@ -35,7 +35,7 @@ describe('SearchFilterBar', () => {
       />
     );
 
-    expect(screen.getByPlaceholderText('Buscar sessões...')).toBeDefined();
+    expect(screen.getByPlaceholderText('Search sessions...')).toBeDefined();
   });
 
   it('should render tag filter button when tags exist', () => {
@@ -83,10 +83,10 @@ describe('SearchFilterBar', () => {
       />
     );
 
-    expect(screen.getByText('10 sessões')).toBeDefined();
+    expect(screen.getByText('10 sessions')).toBeDefined();
   });
 
-  it('should show singular "sessão" for 1 session', () => {
+  it('should show singular "session" for 1 session', () => {
     render(
       <SearchFilterBar
         tags={mockTags}
@@ -99,7 +99,7 @@ describe('SearchFilterBar', () => {
       />
     );
 
-    expect(screen.getByText('1 sessão')).toBeDefined();
+    expect(screen.getByText('1 session')).toBeDefined();
   });
 
   it('should show filtered count when different from total', () => {
@@ -115,7 +115,7 @@ describe('SearchFilterBar', () => {
       />
     );
 
-    expect(screen.getByText('3 de 10 sessões')).toBeDefined();
+    expect(screen.getByText('3 of 10 sessions')).toBeDefined();
   });
 
   it('should call onSearchChange after debounce', async () => {
@@ -131,7 +131,7 @@ describe('SearchFilterBar', () => {
       />
     );
 
-    const input = screen.getByPlaceholderText('Buscar sessões...');
+    const input = screen.getByPlaceholderText('Search sessions...');
     fireEvent.change(input, { target: { value: 'test' } });
 
     // Should not be called immediately
@@ -156,7 +156,7 @@ describe('SearchFilterBar', () => {
       />
     );
 
-    const input = screen.getByPlaceholderText('Buscar sessões...');
+    const input = screen.getByPlaceholderText('Search sessions...');
     fireEvent.change(input, { target: { value: 'TEST' } });
 
     // The component passes the value as-is; case-insensitivity is handled by the parent
@@ -236,8 +236,8 @@ describe('SearchFilterBar', () => {
     );
 
     // Should have chip buttons with tag names
-    const workChip = screen.getByLabelText('Remover filtro work');
-    const personalChip = screen.getByLabelText('Remover filtro personal');
+    const workChip = screen.getByLabelText('Remove filter work');
+    const personalChip = screen.getByLabelText('Remove filter personal');
 
     expect(workChip).toBeDefined();
     expect(personalChip).toBeDefined();
@@ -292,7 +292,7 @@ describe('SearchFilterBar', () => {
       />
     );
 
-    expect(screen.getByLabelText('Limpar busca e filtros')).toBeDefined();
+    expect(screen.getByLabelText('Clear search and filters')).toBeDefined();
   });
 
   it('should not show clear button when no filters active', () => {
@@ -308,7 +308,7 @@ describe('SearchFilterBar', () => {
       />
     );
 
-    expect(screen.queryByLabelText('Limpar busca e filtros')).toBeNull();
+    expect(screen.queryByLabelText('Clear search and filters')).toBeNull();
   });
 
   it('should clear all filters when clicking clear button', async () => {
@@ -324,7 +324,7 @@ describe('SearchFilterBar', () => {
       />
     );
 
-    fireEvent.click(screen.getByLabelText('Limpar busca e filtros'));
+    fireEvent.click(screen.getByLabelText('Clear search and filters'));
 
     expect(onSearchChange).toHaveBeenCalledWith('');
     expect(onTagsChange).toHaveBeenCalledWith([]);
@@ -343,7 +343,7 @@ describe('SearchFilterBar', () => {
       />
     );
 
-    fireEvent.click(screen.getByLabelText('Remover filtro work'));
+    fireEvent.click(screen.getByLabelText('Remove filter work'));
 
     expect(onTagsChange).toHaveBeenCalledWith(['personal']);
   });
@@ -385,7 +385,7 @@ describe('SearchFilterBar', () => {
       />
     );
 
-    expect(screen.getByText('0 sessões')).toBeDefined();
+    expect(screen.getByText('0 sessions')).toBeDefined();
   });
 });
 
@@ -397,21 +397,21 @@ describe('SearchEmptyState', () => {
   it('should render empty state message', () => {
     render(<SearchEmptyState onClear={() => {}} />);
 
-    expect(screen.getByText('Nenhuma sessão encontrada')).toBeDefined();
-    expect(screen.getByText('Tente ajustar os termos de busca ou filtros')).toBeDefined();
+    expect(screen.getByText('No sessions found')).toBeDefined();
+    expect(screen.getByText('Try adjusting your search terms or filters')).toBeDefined();
   });
 
   it('should have clear button', () => {
     render(<SearchEmptyState onClear={() => {}} />);
 
-    expect(screen.getByText('Limpar Filtros')).toBeDefined();
+    expect(screen.getByText('Clear Filters')).toBeDefined();
   });
 
   it('should call onClear when clicking button', () => {
     const onClear = mock(() => {});
     render(<SearchEmptyState onClear={onClear} />);
 
-    fireEvent.click(screen.getByText('Limpar Filtros'));
+    fireEvent.click(screen.getByText('Clear Filters'));
 
     expect(onClear).toHaveBeenCalled();
   });

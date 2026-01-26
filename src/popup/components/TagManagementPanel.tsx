@@ -162,11 +162,11 @@ export function TagManagementPanel({
     <div className="tag-panel-backdrop" onClick={(e) => e.target === e.currentTarget && onClose()}>
       <div className="tag-panel" role="dialog" aria-modal="true" aria-labelledby="tag-panel-title">
         <div className="tag-panel-header">
-          <h2 id="tag-panel-title" className="text-heading">Gerenciar Tags</h2>
+          <h2 id="tag-panel-title" className="text-heading">Manage Tags</h2>
           <button
             className="btn btn-icon btn-secondary"
             onClick={onClose}
-            aria-label="Fechar"
+            aria-label="Close"
           >
             ✕
           </button>
@@ -180,7 +180,7 @@ export function TagManagementPanel({
               onClick={handleStartAdd}
               disabled={isLoading}
             >
-              + Adicionar Tag
+              + Add Tag
             </button>
           )}
 
@@ -192,7 +192,7 @@ export function TagManagementPanel({
                   ref={nameInputRef}
                   type="text"
                   className="input tag-form-name"
-                  placeholder="Nome da tag"
+                  placeholder="Tag name"
                   value={formState.name}
                   onChange={(e) => setFormState(prev => ({ ...prev, name: e.target.value }))}
                   onKeyDown={handleFormKeyDown}
@@ -202,7 +202,7 @@ export function TagManagementPanel({
               </div>
 
               <div className="tag-form-colors">
-                <label className="text-caption text-muted">Cor:</label>
+                <label className="text-caption text-muted">Color:</label>
                 <div className="color-picker">
                   {PREDEFINED_COLORS.map((color) => (
                     <button
@@ -212,7 +212,7 @@ export function TagManagementPanel({
                       style={{ backgroundColor: color }}
                       onClick={() => setFormState(prev => ({ ...prev, color }))}
                       disabled={isSaving}
-                      aria-label={`Cor ${color}`}
+                      aria-label={`Color ${color}`}
                     />
                   ))}
                 </div>
@@ -224,14 +224,14 @@ export function TagManagementPanel({
                   onClick={handleCancelForm}
                   disabled={isSaving}
                 >
-                  Cancelar
+                  Cancel
                 </button>
                 <button
                   className="btn btn-primary btn-sm"
                   onClick={handleSaveTag}
                   disabled={!formState.name.trim() || isSaving}
                 >
-                  {isSaving ? 'Salvando...' : (isAddingTag ? 'Criar' : 'Salvar')}
+                  {isSaving ? 'Saving...' : (isAddingTag ? 'Create' : 'Save')}
                 </button>
               </div>
             </div>
@@ -241,9 +241,9 @@ export function TagManagementPanel({
           {deleteConfirmId !== null && tagToDelete && (
             <div className="tag-delete-confirm">
               <p className="text-body-sm">
-                A tag <strong>"{tagToDelete.name}"</strong> está associada a{' '}
-                <strong>{tagToDelete.sessionCount} {tagToDelete.sessionCount === 1 ? 'sessão' : 'sessões'}</strong>.
-                Deseja excluir mesmo assim?
+                The tag <strong>"{tagToDelete.name}"</strong> is associated with{' '}
+                <strong>{tagToDelete.sessionCount} {tagToDelete.sessionCount === 1 ? 'session' : 'sessions'}</strong>.
+                Are you sure you want to delete?
               </p>
               <div className="tag-delete-confirm-actions">
                 <button
@@ -251,14 +251,14 @@ export function TagManagementPanel({
                   onClick={() => setDeleteConfirmId(null)}
                   disabled={isSaving}
                 >
-                  Cancelar
+                  Cancel
                 </button>
                 <button
                   className="btn btn-danger btn-sm"
                   onClick={() => handleConfirmDelete(deleteConfirmId, tagToDelete.sessionCount)}
                   disabled={isSaving}
                 >
-                  {isSaving ? 'Excluindo...' : 'Excluir'}
+                  {isSaving ? 'Deleting...' : 'Delete'}
                 </button>
               </div>
             </div>
@@ -268,12 +268,12 @@ export function TagManagementPanel({
           {isLoading ? (
             <div className="tag-panel-loading">
               <span className="loading-spinner">⏳</span>
-              <span className="text-muted">Carregando tags...</span>
+              <span className="text-muted">Loading tags...</span>
             </div>
           ) : tags.length === 0 ? (
             <div className="tag-panel-empty">
-              <p className="text-muted">Nenhuma tag criada</p>
-              <p className="text-caption text-muted">Crie tags para organizar suas sessões</p>
+              <p className="text-muted">No tags created</p>
+              <p className="text-caption text-muted">Create tags to organize your sessions</p>
             </div>
           ) : (
             <ul className="tag-list">
@@ -299,7 +299,7 @@ export function TagManagementPanel({
                     />
                     <span className="tag-name">{tag.name}</span>
                     <span className="tag-session-count badge">
-                      {tag.sessionCount} {tag.sessionCount === 1 ? 'sessão' : 'sessões'}
+                      {tag.sessionCount} {tag.sessionCount === 1 ? 'session' : 'sessions'}
                     </span>
                   </div>
                   <button
@@ -309,8 +309,8 @@ export function TagManagementPanel({
                       handleDeleteClick(tag);
                     }}
                     disabled={isSaving || editingTagId !== null || isAddingTag}
-                    aria-label={`Excluir tag ${tag.name}`}
-                    title="Excluir"
+                    aria-label={`Delete tag ${tag.name}`}
+                    title="Delete"
                   >
                     🗑️
                   </button>

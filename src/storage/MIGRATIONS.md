@@ -1,60 +1,60 @@
 # Database Migrations
 
-O SessionKeeper usa Dexie.js para gerenciar migrations do IndexedDB de forma automática.
+SessionKeeper uses Dexie.js to manage IndexedDB migrations automatically.
 
-## Como funciona
+## How it works
 
-### Sistema de Versionamento
+### Versioning System
 
-Cada versão do schema é declarada usando `this.version(N).stores({...})`. O Dexie.js:
+Each schema version is declared using `this.version(N).stores({...})`. Dexie.js:
 
-1. Detecta automaticamente a versão atual do database do usuário
-2. Executa todas as migrations necessárias sequencialmente
-3. Atualiza o database para a versão mais recente
+1. Automatically detects the user's current database version
+2. Executes all necessary migrations sequentially
+3. Updates the database to the most recent version
 
-### Versão 1 (Atual)
+### Version 1 (Current)
 
-Schema inicial com três stores:
+Initial schema with three stores:
 
-- **sessions**: Armazena sessões do browser
-  - Índices: `++id, name, createdAt, updatedAt, *tags`
-  - Multi-entry index em `tags` permite buscar por múltiplas tags
+- **sessions**: Stores browser sessions
+  - Indexes: `++id, name, createdAt, updatedAt, *tags`
+  - Multi-entry index on `tags` allows searching by multiple tags
 
-- **tags**: Tags para categorizar sessões
-  - Índices: `++id, &name, createdAt`
-  - Unique index em `name` previne duplicatas
+- **tags**: Tags to categorize sessions
+  - Indexes: `++id, &name, createdAt`
+  - Unique index on `name` prevents duplicates
 
-- **settings**: Configurações do app
-  - Índices: `++id, &key, updatedAt`
-  - Unique index em `key` garante uma setting por chave
+- **settings**: App settings
+  - Indexes: `++id, &key, updatedAt`
+  - Unique index on `key` ensures one setting per key
 
-## Como adicionar uma migration
+## How to add a migration
 
-### 1. Incremente a versão
+### 1. Increment the version
 
 ```typescript
 this.version(2).stores({
-  // Declare TODAS as tabelas, mesmo as não modificadas
+  // Declare ALL tables, even those not modified
   sessions: '++id, name, createdAt, updatedAt, *tags',
   tags: '++id, &name, createdAt',
   settings: '++id, &key, updatedAt',
 })
 ```
 
-### 2. Adicione upgrade handler (opcional)
+### 2. Add upgrade handler (optional)
 
-Use `.upgrade()` para transformar dados existentes:
+Use `.upgrade()` to transform existing data:
 
 ```typescript
 this.version(2)
   .stores({...})
   .upgrade(async (tx) => {
-    // Adicionar campo com valor padrão
+    // Add field with default value
     await tx.table('sessions').toCollection().modify((session) => {
       session.archived = false;
     });
 
-    // Migrar dados
+    // Migrate data
     const sessions = await tx.table('sessions').toArray();
     for (const session of sessions) {
       if (!session.description) {
@@ -65,54 +65,54 @@ this.version(2)
   });
 ```
 
-### 3. Atualize TypeScript interfaces
+### 3. Update TypeScript interfaces
 
-Sempre mantenha as interfaces sincronizadas com o schema:
+Always keep interfaces synchronized with the schema:
 
 ```typescript
 export interface Session {
   id?: number;
   name: string;
-  archived?: boolean; // Novo campo
+  archived?: boolean; // New field
   // ...
 }
 ```
 
-## Regras importantes
+## Important rules
 
-### ✅ Faça
+### ✅ Do
 
-- Sempre declare TODAS as tabelas em cada versão, mesmo as não modificadas
-- Use `.upgrade()` quando precisar transformar dados existentes
-- Teste migrations com dados reais antes de deployar
-- Documente o propósito de cada migration neste arquivo
+- Always declare ALL tables in each version, even those not modified
+- Use `.upgrade()` when you need to transform existing data
+- Test migrations with real data before deploying
+- Document the purpose of each migration in this file
 
-### ❌ Não faça
+### ❌ Don't
 
-- Nunca remova ou modifique uma migration já deployada
-- Não pule números de versão (use 1, 2, 3, não 1, 3, 5)
-- Não dependa de ordem específica de execução das migrations
-- Não use `null` como valor default em migrations (use undefined)
+- Never remove or modify an already deployed migration
+- Don't skip version numbers (use 1, 2, 3, not 1, 3, 5)
+- Don't depend on specific execution order of migrations
+- Don't use `null` as default value in migrations (use undefined)
 
-## Testando migrations
+## Testing migrations
 
-Para testar uma migration localmente:
+To test a migration locally:
 
-1. Instale a extensão com versão N
-2. Crie dados de teste
-3. Atualize para versão N+1
-4. Verifique no DevTools (Application > IndexedDB) se a migration funcionou
-5. Verifique logs no console da extensão
+1. Install the extension with version N
+2. Create test data
+3. Update to version N+1
+4. Verify in DevTools (Application > IndexedDB) if migration worked
+5. Check logs in extension console
 
 ## Rollback
 
-IndexedDB não suporta rollback automático. Para reverter:
+IndexedDB doesn't support automatic rollback. To revert:
 
-1. Usuário deve desinstalar a extensão
-2. Dados serão perdidos (considere implementar export/backup)
+1. User must uninstall the extension
+2. Data will be lost (consider implementing export/backup)
 
 ## Performance
 
-- Migrations executam apenas uma vez por versão
-- Dexie.js usa transactions para garantir atomicidade
-- Migrations grandes podem travar a UI (use batch processing)
+- Migrations execute only once per version
+- Dexie.js uses transactions to ensure atomicity
+- Large migrations can freeze UI (use batch processing)

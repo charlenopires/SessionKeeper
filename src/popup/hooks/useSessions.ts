@@ -34,7 +34,7 @@ export function useSessions(): UseSessionsResult {
         setError(result.error.getUserMessage());
       }
     } catch (err) {
-      setError('Erro ao carregar sessões');
+      setError('Error loading sessions');
       console.error('Failed to load sessions:', err);
     } finally {
       setIsLoading(false);

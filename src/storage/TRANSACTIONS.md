@@ -1,36 +1,36 @@
 # Transactions in SessionKeeper
 
-O sistema de transações garante atomicidade em operações compostas: todas as operações dentro de uma transação são commitadas juntas ou todas falham (rollback automático).
+The transaction system ensures atomicity in composite operations: all operations within a transaction are committed together or all fail (automatic rollback).
 
-## Quando usar transações
+## When to use transactions
 
-### ✅ Use transações quando:
+### ✅ Use transactions when:
 
-1. **Múltiplas operações dependentes**
-   - Criar uma sessão e várias tags ao mesmo tempo
-   - Atualizar várias sessões relacionadas
-   - Deletar sessão e seus metadados associados
+1. **Multiple dependent operations**
+   - Create a session and several tags at the same time
+   - Update multiple related sessions
+   - Delete session and its associated metadata
 
-2. **Operações bulk**
-   - Importar múltiplas sessões
-   - Atualizar várias sessões de uma vez
-   - Deletar múltiplas sessões
+2. **Bulk operations**
+   - Import multiple sessions
+   - Update multiple sessions at once
+   - Delete multiple sessions
 
-3. **Consistência crítica**
-   - Operações que não podem ser parcialmente aplicadas
-   - Quando falha parcial deixaria dados inconsistentes
+3. **Critical consistency**
+   - Operations that cannot be partially applied
+   - When partial failure would leave inconsistent data
 
-### ❌ Não precisa de transação quando:
+### ❌ Don't need transaction when:
 
-- Operação única e independente
-- Operações de leitura apenas
-- Operações já atômicas por natureza (single CRUD)
+- Single and independent operation
+- Read-only operations
+- Already atomic operations by nature (single CRUD)
 
-## Como usar
+## How to use
 
-### Transação genérica
+### Generic transaction
 
-Use `withTransaction` para operações customizadas:
+Use `withTransaction` for custom operations:
 
 ```typescript
 import { withTransaction, getDatabase } from './storage';
@@ -38,7 +38,7 @@ import { withTransaction, getDatabase } from './storage';
 const result = await withTransaction(async (tx) => {
   const db = getDatabase();
 
-  // Todas as operações dentro são atômicas
+  // All operations inside are atomic
   const id1 = await db.sessions.add({
     name: 'Session 1',
     tabs: [],
@@ -55,7 +55,7 @@ const result = await withTransaction(async (tx) => {
     updatedAt: new Date(),
   });
 
-  // Se qualquer operação falhar, ambas são revertidas
+  // If any operation fails, both are rolled back
   return { id1, id2 };
 });
 
@@ -68,80 +68,80 @@ if (isOk(result)) {
 
 ### Bulk operations (built-in)
 
-Use as funções bulk que já têm transações embutidas:
+Use bulk functions that already have transactions built-in:
 
 ```typescript
 import { bulkCreateSessions, bulkUpdateSessions, bulkDeleteSessions } from './storage';
 
-// Criar múltiplas sessões atomicamente
+// Create multiple sessions atomically
 const result = await bulkCreateSessions([
   { name: 'Session 1', tabs: [] },
   { name: 'Session 2', tabs: [] },
   { name: 'Session 3', tabs: [] },
 ]);
 
-// Atualizar múltiplas sessões atomicamente
+// Update multiple sessions atomically
 await bulkUpdateSessions([
   { id: 1, name: 'Updated 1' },
   { id: 2, name: 'Updated 2' },
 ]);
 
-// Deletar múltiplas sessões atomicamente
+// Delete multiple sessions atomically
 await bulkDeleteSessions([1, 2, 3]);
 ```
 
-## Garantias ACID
+## ACID Guarantees
 
-### Atomicity (Atomicidade)
-Todas as operações dentro da transação são aplicadas ou nenhuma é.
+### Atomicity
+All operations within the transaction are applied or none are.
 
 ```typescript
-// Se o update falhar, o create também é revertido
+// If update fails, create is also rolled back
 await withTransaction(async () => {
   await createSession({ name: 'New', tabs: [] });
-  await updateSession({ id: 999, name: 'Will fail' }); // Não existe
+  await updateSession({ id: 999, name: 'Will fail' }); // Doesn't exist
 });
 ```
 
-### Consistency (Consistência)
-Database permanece em estado válido antes e depois da transação.
+### Consistency
+Database remains in valid state before and after transaction.
 
-### Isolation (Isolamento)
-Transações concorrentes não interferem umas com as outras.
+### Isolation
+Concurrent transactions don't interfere with each other.
 
-### Durability (Durabilidade)
-Uma vez commitada, a transação persiste mesmo com crashes.
+### Durability
+Once committed, the transaction persists even through crashes.
 
-## Tratamento de erros
+## Error handling
 
-Transações retornam `Result<T, StorageError>`:
+Transactions return `Result<T, StorageError>`:
 
 ```typescript
 const result = await withTransaction(async () => {
-  // Seu código aqui
+  // Your code here
   return data;
 });
 
 if (isOk(result)) {
-  // Sucesso - transação foi commitada
+  // Success - transaction was committed
   console.log(result.value);
 } else {
-  // Falha - transação foi revertida automaticamente
+  // Failure - transaction was automatically rolled back
   console.error(result.error.getUserMessage());
 }
 ```
 
 ## Performance
 
-### Boas práticas
+### Best practices
 
-✅ **Faça:**
-- Mantenha transações curtas
-- Execute operações pesadas fora da transação
-- Use bulk operations quando possível
+✅ **Do:**
+- Keep transactions short
+- Execute heavy operations outside the transaction
+- Use bulk operations when possible
 
 ```typescript
-// ✅ Bom: Prepare dados antes da transação
+// ✅ Good: Prepare data before transaction
 const preparedData = heavyComputation(rawData);
 
 await withTransaction(async () => {
@@ -149,28 +149,28 @@ await withTransaction(async () => {
 });
 ```
 
-❌ **Não faça:**
-- Transações longas que bloqueiam o database
-- Operações síncronas pesadas dentro da transação
-- Chamadas de rede dentro da transação
+❌ **Don't:**
+- Long transactions that block the database
+- Heavy synchronous operations inside the transaction
+- Network calls inside the transaction
 
 ```typescript
-// ❌ Ruim: Processamento pesado dentro da transação
+// ❌ Bad: Heavy processing inside transaction
 await withTransaction(async () => {
-  const data = heavyComputation(rawData); // Bloqueia DB
+  const data = heavyComputation(rawData); // Blocks DB
   await db.sessions.add(data);
 });
 
-// ❌ Ruim: Chamada de rede dentro da transação
+// ❌ Bad: Network call inside transaction
 await withTransaction(async () => {
-  const response = await fetch('https://api.example.com'); // Bloqueia DB
+  const response = await fetch('https://api.example.com'); // Blocks DB
   await db.sessions.add(response.data);
 });
 ```
 
-## Exemplos avançados
+## Advanced examples
 
-### Import com validação
+### Import with validation
 
 ```typescript
 import { withTransaction, getDatabase } from './storage';
@@ -179,17 +179,17 @@ async function importSessions(data: ExportData): Promise<Result<number, StorageE
   return withTransaction(async () => {
     const db = getDatabase();
 
-    // Validar antes de importar
+    // Validate before importing
     if (data.version !== '1.0') {
       throw new DatabaseError('Unsupported version');
     }
 
-    // Limpar dados existentes (se replace mode)
+    // Clear existing data (if replace mode)
     if (data.mode === 'replace') {
       await db.sessions.clear();
     }
 
-    // Importar todas as sessões
+    // Import all sessions
     const ids = await db.sessions.bulkAdd(data.sessions, { allKeys: true });
 
     return ids.length;
@@ -197,7 +197,7 @@ async function importSessions(data: ExportData): Promise<Result<number, StorageE
 }
 ```
 
-### Migração de dados
+### Data migration
 
 ```typescript
 async function migrateSessionTags(): Promise<Result<number, StorageError>> {
@@ -208,7 +208,7 @@ async function migrateSessionTags(): Promise<Result<number, StorageError>> {
     let updated = 0;
 
     for (const session of sessions) {
-      // Migrar formato antigo para novo
+      // Migrate old format to new
       if (session.tags.includes('old-tag')) {
         session.tags = session.tags.map(tag =>
           tag === 'old-tag' ? 'new-tag' : tag
@@ -225,36 +225,36 @@ async function migrateSessionTags(): Promise<Result<number, StorageError>> {
 
 ## Debugging
 
-Para debugar transações:
+To debug transactions:
 
 ```typescript
 await withTransaction(async (tx) => {
   console.log('Transaction started');
 
   try {
-    // Suas operações
+    // Your operations
     const result = await someOperation();
     console.log('Operation succeeded:', result);
     return result;
   } catch (error) {
     console.error('Transaction will rollback:', error);
-    throw error; // Re-throw para triggerar rollback
+    throw error; // Re-throw to trigger rollback
   }
 });
 ```
 
-## Limitações
+## Limitations
 
-1. **Não pode usar async callbacks de array methods dentro de transactions**
+1. **Cannot use async callbacks of array methods inside transactions**
    ```typescript
-   // ❌ Não funciona
+   // ❌ Doesn't work
    await withTransaction(async () => {
      await Promise.all(items.map(async item => {
        await db.sessions.add(item);
      }));
    });
 
-   // ✅ Use loop normal
+   // ✅ Use normal loop
    await withTransaction(async () => {
      for (const item of items) {
        await db.sessions.add(item);
@@ -262,12 +262,12 @@ await withTransaction(async (tx) => {
    });
    ```
 
-2. **IndexedDB limites**
-   - Transações têm timeout (geralmente 10-30 segundos)
-   - Não pode ter transações aninhadas
-   - Transação é auto-commitada ao fim da função
+2. **IndexedDB limits**
+   - Transactions have timeout (usually 10-30 seconds)
+   - Cannot have nested transactions
+   - Transaction is auto-committed at end of function
 
-## Referências
+## References
 
 - [Dexie.js Transactions](https://dexie.org/docs/Tutorial/Design#transactions)
 - [IndexedDB Transactions](https://developer.mozilla.org/en-US/docs/Web/API/IDBTransaction)

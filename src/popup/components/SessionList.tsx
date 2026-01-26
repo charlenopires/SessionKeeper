@@ -15,14 +15,14 @@ function EmptyState({ onSaveFirst }: { onSaveFirst?: () => void }) {
     <div className="session-list-empty">
       <div className="empty-illustration">📂</div>
       <h3 className="text-body" style={{ fontWeight: 500 }}>
-        Nenhuma sessão salva
+        No saved sessions
       </h3>
       <p className="text-body-sm text-muted">
-        Salve sua primeira sessão para começar a organizar suas abas
+        Save your first session to start organizing your tabs
       </p>
       {onSaveFirst && (
         <button className="btn btn-primary" onClick={onSaveFirst}>
-          Salvar Sessão Atual
+          Save Current Session
         </button>
       )}
     </div>
@@ -33,7 +33,7 @@ function LoadingState() {
   return (
     <div className="session-list-loading">
       <div className="loading-spinner">⏳</div>
-      <p className="text-body-sm text-muted">Carregando sessões...</p>
+      <p className="text-body-sm text-muted">Loading sessions...</p>
     </div>
   );
 }

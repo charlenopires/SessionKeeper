@@ -64,79 +64,79 @@ describe('validateUrl', () => {
     it('should reject empty string', () => {
       const result = validateUrl('');
       expect(result.isValid).toBe(false);
-      expect(result.reason).toBe('URL vazia ou indefinida');
+      expect(result.reason).toBe('Empty or undefined URL');
     });
 
     it('should reject undefined', () => {
       const result = validateUrl(undefined);
       expect(result.isValid).toBe(false);
-      expect(result.reason).toBe('URL vazia ou indefinida');
+      expect(result.reason).toBe('Empty or undefined URL');
     });
 
     it('should reject whitespace-only string', () => {
       const result = validateUrl('   ');
       expect(result.isValid).toBe(false);
-      expect(result.reason).toBe('URL vazia ou indefinida');
+      expect(result.reason).toBe('Empty or undefined URL');
     });
 
     it('should reject malformed URLs', () => {
       const result = validateUrl('not a url');
       expect(result.isValid).toBe(false);
-      expect(result.reason).toBe('URL malformada');
+      expect(result.reason).toBe('Malformed URL');
     });
 
     it('should reject URLs without protocol', () => {
       const result = validateUrl('example.com');
       expect(result.isValid).toBe(false);
-      expect(result.reason).toBe('URL malformada');
+      expect(result.reason).toBe('Malformed URL');
     });
 
     it('should reject javascript: URLs', () => {
       const result = validateUrl('javascript:alert(1)');
       expect(result.isValid).toBe(false);
-      expect(result.reason).toBe('Protocolo inválido: javascript:');
+      expect(result.reason).toBe('Invalid protocol: javascript:');
     });
 
     it('should reject data: URLs', () => {
       const result = validateUrl('data:text/html,<h1>Hello</h1>');
       expect(result.isValid).toBe(false);
-      expect(result.reason).toBe('Protocolo inválido: data:');
+      expect(result.reason).toBe('Invalid protocol: data:');
     });
 
     it('should reject chrome:// URLs', () => {
       const result = validateUrl('chrome://settings');
       expect(result.isValid).toBe(false);
-      expect(result.reason).toBe('URL de sistema bloqueada: chrome://');
+      expect(result.reason).toBe('Blocked system URL: chrome://');
     });
 
     it('should reject chrome-extension:// URLs', () => {
       const result = validateUrl('chrome-extension://abc123/popup.html');
       expect(result.isValid).toBe(false);
-      expect(result.reason).toBe('URL de sistema bloqueada: chrome-extension://');
+      expect(result.reason).toBe('Blocked system URL: chrome-extension://');
     });
 
     it('should reject about: URLs', () => {
       const result = validateUrl('about:blank');
       expect(result.isValid).toBe(false);
-      expect(result.reason).toBe('URL de sistema bloqueada: about:');
+      expect(result.reason).toBe('Blocked system URL: about:');
     });
 
     it('should reject edge:// URLs', () => {
       const result = validateUrl('edge://settings');
       expect(result.isValid).toBe(false);
-      expect(result.reason).toBe('URL de sistema bloqueada: edge://');
+      expect(result.reason).toBe('Blocked system URL: edge://');
     });
 
     it('should reject brave:// URLs', () => {
       const result = validateUrl('brave://settings');
       expect(result.isValid).toBe(false);
-      expect(result.reason).toBe('URL de sistema bloqueada: brave://');
+      expect(result.reason).toBe('Blocked system URL: brave://');
     });
 
     it('should be case insensitive for blocked prefixes', () => {
       const result = validateUrl('CHROME://settings');
       expect(result.isValid).toBe(false);
-      expect(result.reason).toBe('URL de sistema bloqueada: chrome://');
+      expect(result.reason).toBe('Blocked system URL: chrome://');
     });
   });
 });
@@ -193,7 +193,7 @@ describe('validateWindowTabs', () => {
 
     const result = validateWindowTabs(windows);
 
-    expect(result.invalidTabs[0].reason).toBe('URL de sistema bloqueada: chrome://');
+    expect(result.invalidTabs[0].reason).toBe('Blocked system URL: chrome://');
   });
 
   it('should handle multiple windows', () => {

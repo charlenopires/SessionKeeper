@@ -21,7 +21,7 @@ export class ExportError extends Error {
   }
 
   getUserMessage(): string {
-    return this.userMessage || 'Falha ao exportar sessões. Tente novamente.';
+    return this.userMessage || 'Failed to export sessions. Please try again.';
   }
 }
 
@@ -37,7 +37,7 @@ export async function generateExportData(): Promise<Result<ExportResult, ExportE
       return Err(new ExportError(
         'Failed to fetch sessions',
         sessionsResult.error,
-        'Não foi possível carregar as sessões para exportação.'
+        'Unable to load sessions for export.'
       ));
     }
 
@@ -47,7 +47,7 @@ export async function generateExportData(): Promise<Result<ExportResult, ExportE
       return Err(new ExportError(
         'Failed to fetch tags',
         tagsResult.error,
-        'Não foi possível carregar as tags para exportação.'
+        'Unable to load tags for export.'
       ));
     }
 
@@ -78,7 +78,7 @@ export async function generateExportData(): Promise<Result<ExportResult, ExportE
     return Err(new ExportError(
       'Unexpected error during export',
       error,
-      'Erro inesperado ao exportar. Tente novamente.'
+      'Unexpected error during export. Please try again.'
     ));
   }
 }

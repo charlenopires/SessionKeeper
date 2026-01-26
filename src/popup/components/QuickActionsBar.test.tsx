@@ -16,7 +16,7 @@ describe('QuickActionsBar', () => {
       />
     );
 
-    expect(screen.getByRole('button', { name: /salvar sessão atual/i })).toBeDefined();
+    expect(screen.getByRole('button', { name: /save current session/i })).toBeDefined();
   });
 
   it('should render export button with icon', () => {
@@ -28,7 +28,7 @@ describe('QuickActionsBar', () => {
       />
     );
 
-    const exportBtn = screen.getByRole('button', { name: /exportar/i });
+    const exportBtn = screen.getByRole('button', { name: /export/i });
     expect(exportBtn).toBeDefined();
     expect(exportBtn.textContent).toContain('📥');
   });
@@ -42,7 +42,7 @@ describe('QuickActionsBar', () => {
       />
     );
 
-    const importBtn = screen.getByRole('button', { name: /importar/i });
+    const importBtn = screen.getByRole('button', { name: /import/i });
     expect(importBtn).toBeDefined();
     expect(importBtn.textContent).toContain('📤');
   });
@@ -56,9 +56,9 @@ describe('QuickActionsBar', () => {
       />
     );
 
-    const saveBtn = screen.getByRole('button', { name: /salvar sessão atual/i });
-    const exportBtn = screen.getByRole('button', { name: /exportar/i });
-    const importBtn = screen.getByRole('button', { name: /importar/i });
+    const saveBtn = screen.getByRole('button', { name: /save current session/i });
+    const exportBtn = screen.getByRole('button', { name: /export/i });
+    const importBtn = screen.getByRole('button', { name: /import/i });
 
     expect(saveBtn.getAttribute('title')).toBeDefined();
     expect(exportBtn.getAttribute('title')).toBeDefined();
@@ -75,7 +75,7 @@ describe('QuickActionsBar', () => {
       />
     );
 
-    const exportBtn = screen.getByRole('button', { name: /exportar/i });
+    const exportBtn = screen.getByRole('button', { name: /export/i });
     expect(exportBtn.hasAttribute('disabled')).toBe(true);
   });
 
@@ -89,7 +89,7 @@ describe('QuickActionsBar', () => {
       />
     );
 
-    const saveBtn = screen.getByRole('button', { name: /salvar sessão atual/i });
+    const saveBtn = screen.getByRole('button', { name: /save current session/i });
     expect(saveBtn.hasAttribute('disabled')).toBe(true);
   });
 
@@ -103,7 +103,7 @@ describe('QuickActionsBar', () => {
       />
     );
 
-    expect(screen.getByText(/salvando/i)).toBeDefined();
+    expect(screen.getByText(/saving/i)).toBeDefined();
   });
 
   it('should show loading state when exporting', () => {
@@ -116,7 +116,7 @@ describe('QuickActionsBar', () => {
       />
     );
 
-    expect(screen.getByText(/exportando/i)).toBeDefined();
+    expect(screen.getByText(/exporting/i)).toBeDefined();
   });
 
   it('should show loading state when importing', () => {
@@ -129,7 +129,7 @@ describe('QuickActionsBar', () => {
       />
     );
 
-    expect(screen.getByText(/importando/i)).toBeDefined();
+    expect(screen.getByText(/importing/i)).toBeDefined();
   });
 
   it('should disable all buttons when any is loading', () => {
@@ -142,9 +142,9 @@ describe('QuickActionsBar', () => {
       />
     );
 
-    const saveBtn = screen.getByRole('button', { name: /salvar sessão atual/i });
-    const exportBtn = screen.getByRole('button', { name: /exportar/i });
-    const importBtn = screen.getByRole('button', { name: /importar/i });
+    const saveBtn = screen.getByRole('button', { name: /save current session/i });
+    const exportBtn = screen.getByRole('button', { name: /export/i });
+    const importBtn = screen.getByRole('button', { name: /import/i });
 
     expect(saveBtn.hasAttribute('disabled')).toBe(true);
     expect(exportBtn.hasAttribute('disabled')).toBe(true);
@@ -161,7 +161,7 @@ describe('QuickActionsBar', () => {
       />
     );
 
-    const saveBtn = screen.getByRole('button', { name: /salvar sessão atual/i });
+    const saveBtn = screen.getByRole('button', { name: /save current session/i });
     fireEvent.click(saveBtn);
 
     expect(onSaveSession).toHaveBeenCalled();
@@ -177,7 +177,7 @@ describe('QuickActionsBar', () => {
       />
     );
 
-    const exportBtn = screen.getByRole('button', { name: /exportar/i });
+    const exportBtn = screen.getByRole('button', { name: /export/i });
     fireEvent.click(exportBtn);
 
     expect(onExport).toHaveBeenCalled();
@@ -193,7 +193,7 @@ describe('QuickActionsBar', () => {
       />
     );
 
-    const importBtn = screen.getByRole('button', { name: /importar/i });
+    const importBtn = screen.getByRole('button', { name: /import/i });
     fireEvent.click(importBtn);
 
     expect(onImport).toHaveBeenCalled();
@@ -209,7 +209,7 @@ describe('QuickActionsBar', () => {
       />
     );
 
-    const exportBtn = screen.getByRole('button', { name: /exportar/i });
-    expect(exportBtn.getAttribute('title')).toContain('Nenhuma sessão');
+    const exportBtn = screen.getByRole('button', { name: /export/i });
+    expect(exportBtn.getAttribute('title')).toContain('No sessions');
   });
 });

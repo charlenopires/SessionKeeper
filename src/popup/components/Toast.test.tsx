@@ -54,8 +54,8 @@ describe('useToast', () => {
 
     expect(result.current.toasts).toHaveLength(1);
     expect(result.current.toasts[0].type).toBe('success');
-    expect(result.current.toasts[0].title).toBe('"Work Session" salva');
-    expect(result.current.toasts[0].message).toBe('10 abas em 2 janelas');
+    expect(result.current.toasts[0].title).toBe('"Work Session" saved');
+    expect(result.current.toasts[0].message).toBe('10 tabs in 2 windows');
   });
 
   it('should use singular form for 1 tab and 1 window', () => {
@@ -65,7 +65,7 @@ describe('useToast', () => {
       result.current.showSessionSaved('Single', 1, 1);
     });
 
-    expect(result.current.toasts[0].message).toBe('1 aba em 1 janela');
+    expect(result.current.toasts[0].message).toBe('1 tab in 1 window');
   });
 
   it('should show error toast', () => {
@@ -142,7 +142,7 @@ describe('Toast Component', () => {
       />
     );
 
-    expect(screen.getByLabelText('Fechar notificação')).toBeDefined();
+    expect(screen.getByLabelText('Close notification')).toBeDefined();
   });
 
   it('should call onDismiss when X button is clicked', async () => {
@@ -154,7 +154,7 @@ describe('Toast Component', () => {
       />
     );
 
-    fireEvent.click(screen.getByLabelText('Fechar notificação'));
+    fireEvent.click(screen.getByLabelText('Close notification'));
 
     // Wait for animation timeout (300ms)
     await new Promise(resolve => setTimeout(resolve, 350));

@@ -80,7 +80,7 @@ describe('EditSessionModal', () => {
     );
 
     expect(screen.getByRole('dialog')).toBeDefined();
-    expect(screen.getByText('Editar Sessão')).toBeDefined();
+    expect(screen.getByText('Edit Session')).toBeDefined();
   });
 
   it('should pre-fill form with session data', () => {
@@ -94,10 +94,10 @@ describe('EditSessionModal', () => {
       />
     );
 
-    const nameInput = screen.getByLabelText(/nome da sessão/i) as HTMLInputElement;
+    const nameInput = screen.getByLabelText(/session name/i) as HTMLInputElement;
     expect(nameInput.value).toBe('Test Session');
 
-    const descInput = screen.getByLabelText(/descrição/i) as HTMLTextAreaElement;
+    const descInput = screen.getByLabelText(/description/i) as HTMLTextAreaElement;
     expect(descInput.value).toBe('Test description');
   });
 
@@ -112,8 +112,8 @@ describe('EditSessionModal', () => {
       />
     );
 
-    expect(screen.getByText(/2 janelas/)).toBeDefined();
-    expect(screen.getByText(/3 abas/)).toBeDefined();
+    expect(screen.getByText(/2 windows/)).toBeDefined();
+    expect(screen.getByText(/3 tabs/)).toBeDefined();
   });
 
   it('should show tabs from session', () => {
@@ -177,14 +177,14 @@ describe('EditSessionModal', () => {
     );
 
     // Initially 3 tabs
-    expect(screen.getByText(/3 abas/)).toBeDefined();
+    expect(screen.getByText(/3 tabs/)).toBeDefined();
 
     // Remove first tab
-    const removeButtons = screen.getAllByTitle('Remover aba');
+    const removeButtons = screen.getAllByTitle('Remove tab');
     fireEvent.click(removeButtons[0]);
 
     // Now 2 tabs
-    expect(screen.getByText(/2 abas/)).toBeDefined();
+    expect(screen.getByText(/2 tabs/)).toBeDefined();
     expect(screen.queryByText('Example')).toBeNull();
   });
 
@@ -200,14 +200,14 @@ describe('EditSessionModal', () => {
     );
 
     // No dirty indicator initially
-    expect(screen.queryByTitle('Alterações não salvas')).toBeNull();
+    expect(screen.queryByTitle('Unsaved changes')).toBeNull();
 
     // Change name
-    const nameInput = screen.getByLabelText(/nome da sessão/i);
+    const nameInput = screen.getByLabelText(/session name/i);
     fireEvent.change(nameInput, { target: { value: 'New Name' } });
 
     // Dirty indicator appears
-    expect(screen.getByTitle('Alterações não salvas')).toBeDefined();
+    expect(screen.getByTitle('Unsaved changes')).toBeDefined();
   });
 
   it('should call onSave with updated data', () => {
@@ -223,12 +223,12 @@ describe('EditSessionModal', () => {
     );
 
     // Change name
-    fireEvent.change(screen.getByLabelText(/nome da sessão/i), {
+    fireEvent.change(screen.getByLabelText(/session name/i), {
       target: { value: 'Updated Session' },
     });
 
     // Save
-    fireEvent.click(screen.getByRole('button', { name: /salvar alterações/i }));
+    fireEvent.click(screen.getByRole('button', { name: /save changes/i }));
 
     expect(onSave).toHaveBeenCalled();
     const callArg = onSave.mock.calls[0][0];
@@ -248,7 +248,7 @@ describe('EditSessionModal', () => {
       />
     );
 
-    fireEvent.click(screen.getByRole('button', { name: /cancelar/i }));
+    fireEvent.click(screen.getByRole('button', { name: /cancel/i }));
 
     expect(onCancel).toHaveBeenCalled();
   });
@@ -282,7 +282,7 @@ describe('EditSessionModal', () => {
       />
     );
 
-    expect(screen.getByText(/salvando/i)).toBeDefined();
+    expect(screen.getByText(/saving/i)).toBeDefined();
   });
 
   it('should disable save when all tabs removed', () => {
@@ -311,11 +311,11 @@ describe('EditSessionModal', () => {
     );
 
     // Remove the only tab
-    const removeButton = screen.getByTitle('Remover aba');
+    const removeButton = screen.getByTitle('Remove tab');
     fireEvent.click(removeButton);
 
     // Save button should be disabled
-    const saveBtn = screen.getByRole('button', { name: /salvar alterações/i });
+    const saveBtn = screen.getByRole('button', { name: /save changes/i });
     expect(saveBtn.hasAttribute('disabled')).toBe(true);
   });
 
@@ -330,9 +330,9 @@ describe('EditSessionModal', () => {
       />
     );
 
-    fireEvent.click(screen.getByText(/nova tag/i));
+    fireEvent.click(screen.getByText(/new tag/i));
 
-    expect(screen.getByPlaceholderText(/nova tag/i)).toBeDefined();
+    expect(screen.getByPlaceholderText(/new tag/i)).toBeDefined();
   });
 
   it('should have draggable tabs', () => {

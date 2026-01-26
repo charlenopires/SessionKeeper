@@ -2,21 +2,21 @@
 
 ## Purpose
 
-Chrome Extension para salvar e restaurar sessões do navegador com suporte a múltiplas janelas. Permite capturar o estado atual de todas as abas abertas, organizá-las com tags, e restaurá-las posteriormente em novas janelas ou na janela atual.
+Chrome Extension for saving and restoring browser sessions with multi-window support. Allows capturing the current state of all open tabs, organizing them with tags, and restoring them later in new windows or the current window.
 
 ## Core Values
 
-1. **Clarity** - Código funcional auto-documentado com tipos TypeScript discriminados
-2. **Simplicity** - Funções puras, imutabilidade, composição sobre herança
-3. **Testability** - Todas as features devem ter testes unitários com Bun test
-4. **Accessibility** - Interface acessível via teclado com ARIA labels e focus trap
+1. **Clarity** - Self-documenting functional code with discriminated TypeScript types
+2. **Simplicity** - Pure functions, immutability, composition over inheritance
+3. **Testability** - All features must have unit tests with Bun test
+4. **Accessibility** - Keyboard-accessible interface with ARIA labels and focus trap
 
 ## Technical Constraints
 
-- **Language**: TypeScript strict mode com tipos discriminados (Result<T, E>)
-- **Framework**: React 18 com hooks funcionais (sem classes)
-- **Database**: Dexie.js (wrapper para IndexedDB)
-- **Runtime**: Bun (nunca npm/yarn/pnpm)
+- **Language**: TypeScript strict mode with discriminated types (Result<T, E>)
+- **Framework**: React 18 with functional hooks (no classes)
+- **Database**: Dexie.js (wrapper for IndexedDB)
+- **Runtime**: Bun (never npm/yarn/pnpm)
 - **Build**: Vite + @crxjs/vite-plugin
 - **Platform**: Chrome Extension Manifest V3 (Service Worker)
 - **Minimum Test Coverage**: 80%
@@ -25,10 +25,10 @@ Chrome Extension para salvar e restaurar sessões do navegador com suporte a mú
 
 - All code must pass linting without warnings
 - No hardcoded secrets or credentials
-- Result pattern para error handling (nunca throw)
-- UUID v4 para identificadores (evita conflitos em merge)
-- Paradigma funcional: funções puras, imutabilidade, pipe/flow para transformações
-- CSS com design tokens definidos em `.claude/design-system.md`
+- Result pattern for error handling (never throw)
+- UUID v4 for identifiers (avoids conflicts on merge)
+- Functional paradigm: pure functions, immutability, pipe/flow for transformations
+- CSS with design tokens defined in `.claude/design-system.md`
 
 ## Workflow Rules
 
@@ -39,18 +39,18 @@ Chrome Extension para salvar e restaurar sessões do navegador com suporte a mú
 
 ## Bounded Contexts (DDD)
 
-1. **Storage** - Persistência em IndexedDB com Dexie.js
-2. **SessionManagement** - Captura de abas via chrome.tabs API
-3. **SessionRestoration** - Restauração em nova janela ou janela atual
-4. **ImportExport** - Export/Import JSON com validação de schema
-5. **UI** - Interface React do popup (400x600px)
+1. **Storage** - Persistence in IndexedDB with Dexie.js
+2. **SessionManagement** - Tab capture via chrome.tabs API
+3. **SessionRestoration** - Restoration in new window or current window
+4. **ImportExport** - Export/Import JSON with schema validation
+5. **UI** - React popup interface (400x600px)
 
 ## Out of Scope
 
-- Sincronização com cloud/servidor (apenas local storage)
-- Suporte a outros navegadores (Firefox, Safari, Edge)
-- Auto-save automático (apenas manual via botão)
-- Histórico de versões de sessões
+- Cloud/server synchronization (local storage only)
+- Support for other browsers (Firefox, Safari, Edge)
+- Auto-save (manual only via button)
+- Session version history
 
 ---
-_Last updated: 2026-01-25_
+_Last updated: 2026-01-26_
