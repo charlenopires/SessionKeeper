@@ -2,6 +2,10 @@
 
 A Chrome extension for saving and restoring browser sessions with multi-window support.
 
+<p align="center">
+  <img src="samples/print.png" alt="SessionKeeper Screenshot" width="400">
+</p>
+
 ## Features
 
 - **Save Sessions**: Capture all open tabs across multiple windows
