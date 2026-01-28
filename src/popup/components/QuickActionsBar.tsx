@@ -1,3 +1,5 @@
+import { Save, Download, Upload, LoaderCircle } from 'lucide-react';
+
 interface QuickActionsBarProps {
   readonly onSaveSession: () => void;
   readonly onExport: () => void;
@@ -33,12 +35,12 @@ export function QuickActionsBar({
       >
         {isSaving ? (
           <>
-            <span className="btn-spinner">⏳</span>
+            <LoaderCircle size={16} className="btn-spinner animate-spin" />
             Saving...
           </>
         ) : (
           <>
-            <span className="btn-icon-left">💾</span>
+            <Save size={16} className="btn-icon-left" />
             Save Current Session
           </>
         )}
@@ -55,12 +57,12 @@ export function QuickActionsBar({
         >
           {isExporting ? (
             <>
-              <span className="btn-spinner">⏳</span>
+              <LoaderCircle size={16} className="btn-spinner animate-spin" />
               Exporting...
             </>
           ) : (
             <>
-              <span className="btn-icon-left">📥</span>
+              <Download size={16} className="btn-icon-left" />
               Export
             </>
           )}
@@ -75,12 +77,12 @@ export function QuickActionsBar({
         >
           {isImporting ? (
             <>
-              <span className="btn-spinner">⏳</span>
+              <LoaderCircle size={16} className="btn-spinner animate-spin" />
               Importing...
             </>
           ) : (
             <>
-              <span className="btn-icon-left">📤</span>
+              <Upload size={16} className="btn-icon-left" />
               Import
             </>
           )}

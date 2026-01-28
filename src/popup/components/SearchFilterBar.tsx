@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { Search, X, Tag as TagIcon, Check } from 'lucide-react';
 import type { Tag } from '../../storage';
 
 export interface SearchFilterBarProps {
@@ -112,7 +113,7 @@ export function SearchFilterBar({
     <div className="search-filter-bar">
       {/* Search Input */}
       <div className="search-input-wrapper">
-        <span className="search-icon" aria-hidden="true">🔍</span>
+        <Search size={16} className="search-icon" aria-hidden="true" />
         <input
           ref={inputRef}
           type="text"
@@ -129,7 +130,7 @@ export function SearchFilterBar({
             aria-label="Clear search and filters"
             title="Clear"
           >
-            ✕
+            <X size={14} />
           </button>
         )}
       </div>
@@ -143,7 +144,7 @@ export function SearchFilterBar({
             aria-expanded={isTagDropdownOpen}
             aria-haspopup="listbox"
           >
-            🏷️ Tags
+            <TagIcon size={14} /> Tags
             {selectedTags.length > 0 && (
               <span className="tag-filter-count">{selectedTags.length}</span>
             )}
@@ -166,7 +167,7 @@ export function SearchFilterBar({
                       style={{ backgroundColor: tag.color || '#9E9E9E' }}
                     />
                     <span className="tag-filter-name">{tag.name}</span>
-                    {isSelected && <span className="tag-filter-check">✓</span>}
+                    {isSelected && <span className="tag-filter-check"><Check size={14} /></span>}
                   </button>
                 );
               })}
@@ -196,7 +197,7 @@ export function SearchFilterBar({
                   style={{ backgroundColor: tag?.color || '#9E9E9E' }}
                 />
                 {tagName}
-                <span className="selected-tag-remove">✕</span>
+                <span className="selected-tag-remove"><X size={12} /></span>
               </button>
             );
           })}
@@ -217,7 +218,7 @@ export function SearchFilterBar({
 export function SearchEmptyState({ onClear }: { onClear: () => void }) {
   return (
     <div className="search-empty-state">
-      <div className="empty-illustration">🔍</div>
+      <div className="empty-illustration"><Search size={48} /></div>
       <h3 className="text-body" style={{ fontWeight: 500 }}>
         No sessions found
       </h3>

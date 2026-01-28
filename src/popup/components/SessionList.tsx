@@ -1,3 +1,4 @@
+import { FolderOpen, LoaderCircle } from 'lucide-react';
 import type { Session } from '../../storage';
 import { SessionCard } from './SessionCard';
 
@@ -13,7 +14,7 @@ interface SessionListProps {
 function EmptyState({ onSaveFirst }: { onSaveFirst?: () => void }) {
   return (
     <div className="session-list-empty">
-      <div className="empty-illustration">📂</div>
+      <div className="empty-illustration"><FolderOpen size={48} /></div>
       <h3 className="text-body" style={{ fontWeight: 500 }}>
         No saved sessions
       </h3>
@@ -32,7 +33,7 @@ function EmptyState({ onSaveFirst }: { onSaveFirst?: () => void }) {
 function LoadingState() {
   return (
     <div className="session-list-loading">
-      <div className="loading-spinner">⏳</div>
+      <div className="loading-spinner"><LoaderCircle size={24} className="animate-spin" /></div>
       <p className="text-body-sm text-muted">Loading sessions...</p>
     </div>
   );

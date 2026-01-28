@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { RotateCcw, Pencil, Trash2, AppWindow, FileText, Pin } from 'lucide-react';
 import type { Session } from '../../storage';
 import { formatRelativeDate } from '../utils/formatRelativeDate';
 
@@ -75,7 +76,7 @@ export function SessionCard({ session, onRestore, onEdit, onDelete }: SessionCar
             aria-label="Restore session"
             title="Restore"
           >
-            🔄
+            <RotateCcw size={16} />
           </button>
           <button
             className="btn btn-icon btn-secondary session-action-btn"
@@ -83,7 +84,7 @@ export function SessionCard({ session, onRestore, onEdit, onDelete }: SessionCar
             aria-label="Edit session"
             title="Edit"
           >
-            ✏️
+            <Pencil size={16} />
           </button>
           <button
             className="btn btn-icon btn-secondary session-action-btn"
@@ -91,7 +92,7 @@ export function SessionCard({ session, onRestore, onEdit, onDelete }: SessionCar
             aria-label="Delete session"
             title="Delete"
           >
-            🗑️
+            <Trash2 size={16} />
           </button>
         </div>
       </div>
@@ -110,10 +111,10 @@ export function SessionCard({ session, onRestore, onEdit, onDelete }: SessionCar
       {/* Meta info */}
       <div className="session-card-meta">
         <span className="session-card-stat" title="Windows">
-          🪟 {session.totalWindows}
+          <AppWindow size={14} /> {session.totalWindows}
         </span>
         <span className="session-card-stat" title="Tabs">
-          📄 {session.totalTabs}
+          <FileText size={14} /> {session.totalTabs}
         </span>
         <span className="session-card-date text-muted">
           {formatRelativeDate(session.createdAt)}
@@ -132,7 +133,7 @@ export function SessionCard({ session, onRestore, onEdit, onDelete }: SessionCar
                 {window.tabs.map((tab, tabIndex) => (
                   <li key={tabIndex} className="session-preview-tab">
                     {tab.pinned && (
-                      <span className="tab-pin-indicator" title="Pinned tab">📌</span>
+                      <span className="tab-pin-indicator" title="Pinned tab"><Pin size={12} /></span>
                     )}
                     {tab.favIconUrl ? (
                       <img
@@ -144,7 +145,7 @@ export function SessionCard({ session, onRestore, onEdit, onDelete }: SessionCar
                         }}
                       />
                     ) : (
-                      <span className="tab-favicon-placeholder">📄</span>
+                      <span className="tab-favicon-placeholder"><FileText size={14} /></span>
                     )}
                     <span className="tab-title" title={tab.url}>
                       {truncateText(tab.title, 40)}

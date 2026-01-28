@@ -1360,3 +1360,48 @@ body {
   font-size: 48px;
   opacity: 0.5;
 }
+
+/* Spinner Animation */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Icon alignment utilities */
+.btn-icon-left {
+  display: inline-flex;
+  align-items: center;
+}
+
+.session-card-stat,
+.save-modal-counter,
+.restore-modal-counter {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.tab-pin-indicator,
+.tab-favicon-placeholder {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tag-filter-check {
+  display: inline-flex;
+  align-items: center;
+}
+
+.selected-tag-remove {
+  display: inline-flex;
+  align-items: center;
+}

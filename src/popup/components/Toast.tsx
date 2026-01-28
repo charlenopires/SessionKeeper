@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Check, X, Info, TriangleAlert } from 'lucide-react';
 
 export type ToastType = 'success' | 'error' | 'info' | 'warning';
 
@@ -30,11 +31,11 @@ const toastStyles: Record<ToastType, React.CSSProperties> = {
   },
 };
 
-const icons: Record<ToastType, string> = {
-  success: '✓',
-  error: '✕',
-  info: 'ℹ',
-  warning: '⚠',
+const ToastIcons: Record<ToastType, React.ReactNode> = {
+  success: <Check size={18} />,
+  error: <X size={18} />,
+  info: <Info size={18} />,
+  warning: <TriangleAlert size={18} />,
 };
 
 export function Toast({ toast, onDismiss }: ToastProps) {
@@ -79,7 +80,7 @@ export function Toast({ toast, onDismiss }: ToastProps) {
         transition: 'transform 0.3s ease, opacity 0.3s ease',
       }}
     >
-      <span style={{ fontSize: '18px', lineHeight: 1 }}>{icons[toast.type]}</span>
+      <span style={{ fontSize: '18px', lineHeight: 1, display: 'flex', alignItems: 'center' }}>{ToastIcons[toast.type]}</span>
       <div style={{ flex: 1 }}>
         <div style={{ fontWeight: 500, marginBottom: toast.message ? '4px' : 0 }}>
           {toast.title}
@@ -105,7 +106,7 @@ export function Toast({ toast, onDismiss }: ToastProps) {
         onMouseEnter={(e) => { e.currentTarget.style.opacity = '1'; }}
         onMouseLeave={(e) => { e.currentTarget.style.opacity = '0.8'; }}
       >
-        ✕
+        <X size={16} />
       </button>
     </div>
   );

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { AppWindow, FileText, TriangleAlert } from 'lucide-react';
 import type { Session } from '../../storage';
 import type { RestoreProgress, DuplicateDetectionResult, TabWithDuplicateStatus } from '../../session-management';
 
@@ -105,10 +106,10 @@ export function RestoreOptionsModal({
           )}
           <div className="restore-modal-counters">
             <span className="restore-modal-counter">
-              🪟 {session.totalWindows} {session.totalWindows === 1 ? 'window' : 'windows'}
+              <AppWindow size={14} /> {session.totalWindows} {session.totalWindows === 1 ? 'window' : 'windows'}
             </span>
             <span className="restore-modal-counter">
-              📄 {session.totalTabs} {session.totalTabs === 1 ? 'tab' : 'tabs'}
+              <FileText size={14} /> {session.totalTabs} {session.totalTabs === 1 ? 'tab' : 'tabs'}
             </span>
           </div>
         </div>
@@ -146,8 +147,8 @@ export function RestoreOptionsModal({
         {hasDuplicates && (
           <div className="restore-modal-duplicates">
             <div className="restore-modal-duplicates-header">
-              <span className="text-body-sm text-warning">
-                ⚠️ {duplicates.duplicateCount} {duplicates.duplicateCount === 1 ? 'tab is already open' : 'tabs are already open'}
+              <span className="text-body-sm text-warning" style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <TriangleAlert size={14} /> {duplicates.duplicateCount} {duplicates.duplicateCount === 1 ? 'tab is already open' : 'tabs are already open'}
               </span>
             </div>
 
@@ -175,7 +176,7 @@ export function RestoreOptionsModal({
                       }}
                     />
                   ) : (
-                    <span className="tab-favicon-placeholder">📄</span>
+                    <span className="tab-favicon-placeholder"><FileText size={14} /></span>
                   )}
                   <span className="tab-title" title={item.tab.url}>
                     {truncateText(item.tab.title, 35)}

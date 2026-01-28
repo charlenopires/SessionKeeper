@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { AppWindow, FileText, Pin, X, Check } from 'lucide-react';
 import type { Session, StoredWindowSnapshot, StoredTab } from '../../storage';
 import type { Tag } from '../../storage';
 
@@ -363,10 +364,10 @@ export function EditSessionModal({
         {/* Counters */}
         <div className="save-modal-counters">
           <span className="save-modal-counter">
-            🪟 {totalWindows} {totalWindows === 1 ? 'window' : 'windows'}
+            <AppWindow size={14} /> {totalWindows} {totalWindows === 1 ? 'window' : 'windows'}
           </span>
           <span className="save-modal-counter">
-            📄 {totalTabs} {totalTabs === 1 ? 'tab' : 'tabs'}
+            <FileText size={14} /> {totalTabs} {totalTabs === 1 ? 'tab' : 'tabs'}
           </span>
         </div>
 
@@ -419,7 +420,7 @@ export function EditSessionModal({
                       ) : (
                         <>
                           {tab.pinned && (
-                            <span className="tab-pin-indicator" title="Pinned tab">📌</span>
+                            <span className="tab-pin-indicator" title="Pinned tab"><Pin size={12} /></span>
                           )}
                           {tab.favIconUrl ? (
                             <img
@@ -431,7 +432,7 @@ export function EditSessionModal({
                               }}
                             />
                           ) : (
-                            <span className="tab-favicon-placeholder">📄</span>
+                            <span className="tab-favicon-placeholder"><FileText size={14} /></span>
                           )}
                           <span
                             className="tab-title tab-title-editable"
@@ -447,7 +448,7 @@ export function EditSessionModal({
                             title="Remove tab"
                             aria-label="Remove tab"
                           >
-                            ✕
+                            <X size={14} />
                           </button>
                         </>
                       )}
@@ -539,7 +540,7 @@ export function EditSessionModal({
                     disabled={!newTagName.trim() || isCreatingTag}
                     title="Create tag"
                   >
-                    ✓
+                    <Check size={14} />
                   </button>
                   <button
                     type="button"
@@ -551,7 +552,7 @@ export function EditSessionModal({
                     disabled={isCreatingTag}
                     title="Cancel"
                   >
-                    ✕
+                    <X size={14} />
                   </button>
                 </div>
               ) : (

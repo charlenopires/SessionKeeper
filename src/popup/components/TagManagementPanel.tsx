@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { X, Trash2, LoaderCircle } from 'lucide-react';
 import type { Tag } from '../../storage';
 
 export interface TagWithCount extends Tag {
@@ -168,7 +169,7 @@ export function TagManagementPanel({
             onClick={onClose}
             aria-label="Close"
           >
-            ✕
+            <X size={16} />
           </button>
         </div>
 
@@ -267,7 +268,7 @@ export function TagManagementPanel({
           {/* Tags list */}
           {isLoading ? (
             <div className="tag-panel-loading">
-              <span className="loading-spinner">⏳</span>
+              <LoaderCircle size={20} className="loading-spinner animate-spin" />
               <span className="text-muted">Loading tags...</span>
             </div>
           ) : tags.length === 0 ? (
@@ -312,7 +313,7 @@ export function TagManagementPanel({
                     aria-label={`Delete tag ${tag.name}`}
                     title="Delete"
                   >
-                    🗑️
+                    <Trash2 size={14} />
                   </button>
                 </li>
               ))}
