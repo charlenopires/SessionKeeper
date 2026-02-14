@@ -1,6 +1,10 @@
-# SessionKeeper
+# <img src="public/icons/icon48.png" width="32" height="32" alt="SessionKeeper icon"> SessionKeeper
 
 A Chrome extension for saving and restoring browser sessions with multi-window support.
+
+<p align="center">
+  <img src="public/icons/icon128.png" alt="SessionKeeper Icon" width="128">
+</p>
 
 <p align="center">
   <img src="samples/print.png" alt="SessionKeeper Screenshot" width="400">
