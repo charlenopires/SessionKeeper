@@ -5,7 +5,7 @@
 
 set -e
 
-SOURCE_IMAGE="samples/icon.jpg"
+SOURCE_IMAGE="samples/icon.svg"
 OUTPUT_DIR="public/icons"
 SIZES=(16 48 128)
 
@@ -23,23 +23,21 @@ if command -v magick &> /dev/null; then
     # ImageMagick 7+
     echo "Using ImageMagick..."
     for size in "${SIZES[@]}"; do
-        magick "$SOURCE_IMAGE" -resize "${size}x${size}" -background none -gravity center -extent "${size}x${size}" "$OUTPUT_DIR/icon${size}.png"
+        magick -background none -density 256 "$SOURCE_IMAGE" -resize "${size}x${size}" -gravity center -extent "${size}x${size}" "$OUTPUT_DIR/icon${size}.png"
         echo "Generated: $OUTPUT_DIR/icon${size}.png"
     done
 elif command -v convert &> /dev/null; then
     # ImageMagick 6
     echo "Using ImageMagick (convert)..."
     for size in "${SIZES[@]}"; do
-        convert "$SOURCE_IMAGE" -resize "${size}x${size}" -background none -gravity center -extent "${size}x${size}" "$OUTPUT_DIR/icon${size}.png"
+        convert -background none -density 256 "$SOURCE_IMAGE" -resize "${size}x${size}" -gravity center -extent "${size}x${size}" "$OUTPUT_DIR/icon${size}.png"
         echo "Generated: $OUTPUT_DIR/icon${size}.png"
     done
-elif command -v sips &> /dev/null; then
-    # macOS built-in tool
-    echo "Using sips (macOS)..."
+elif command -v rsvg-convert &> /dev/null; then
+    # librsvg (brew install librsvg)
+    echo "Using rsvg-convert..."
     for size in "${SIZES[@]}"; do
-        # sips requires copying first, then resizing
-        cp "$SOURCE_IMAGE" "$OUTPUT_DIR/icon${size}.png"
-        sips -z "$size" "$size" "$OUTPUT_DIR/icon${size}.png" --out "$OUTPUT_DIR/icon${size}.png" > /dev/null
+        rsvg-convert -w "$size" -h "$size" "$SOURCE_IMAGE" -o "$OUTPUT_DIR/icon${size}.png"
         echo "Generated: $OUTPUT_DIR/icon${size}.png"
     done
 else

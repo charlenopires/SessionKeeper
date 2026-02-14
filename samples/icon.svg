@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#818CF8"/>
+      <stop offset="100%" stop-color="#A78BFA"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="512" height="512" rx="108" fill="url(#bg)"/>
+
+  <!-- Back window (offset) -->
+  <rect x="130" y="76" width="280" height="216" rx="20" fill="white" opacity="0.3"/>
+
+  <!-- Main window shadow -->
+  <rect x="88" y="120" width="280" height="240" rx="20" fill="#4338CA" opacity="0.25"/>
+
+  <!-- Main window body -->
+  <rect x="82" y="114" width="280" height="240" rx="20" fill="white"/>
+
+  <!-- Title bar -->
+  <rect x="82" y="114" width="280" height="52" rx="20" fill="#EEF2FF"/>
+  <rect x="82" y="146" width="280" height="20" fill="#EEF2FF"/>
+
+  <!-- Traffic lights -->
+  <circle cx="114" cy="140" r="10" fill="#FB7185"/>
+  <circle cx="142" cy="140" r="10" fill="#FBBF24"/>
+  <circle cx="170" cy="140" r="10" fill="#4ADE80"/>
+
+  <!-- Tab indicators -->
+  <rect x="196" y="128" width="52" height="26" rx="8" fill="white" opacity="0.8"/>
+  <rect x="254" y="128" width="52" height="26" rx="8" fill="#C7D2FE" opacity="0.5"/>
+  <rect x="312" y="128" width="38" height="26" rx="8" fill="#C7D2FE" opacity="0.5"/>
+
+  <!-- Content lines -->
+  <rect x="110" y="188" width="180" height="14" rx="7" fill="#C7D2FE"/>
+  <rect x="110" y="214" width="224" height="14" rx="7" fill="#E0E7FF"/>
+  <rect x="110" y="240" width="150" height="14" rx="7" fill="#E0E7FF"/>
+  <rect x="110" y="266" width="200" height="14" rx="7" fill="#EEF2FF"/>
+
+  <!-- Green save badge -->
+  <circle cx="362" cy="370" r="80" fill="#10B981"/>
+
+  <!-- Bookmark icon in badge -->
+  <path d="M334 330 L334 410 L362 390 L390 410 L390 330 Z" fill="white"/>
+</svg>
