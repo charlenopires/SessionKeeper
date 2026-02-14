@@ -1,4 +1,5 @@
 import { useState, useMemo, useCallback, useEffect } from 'react';
+import { Tags } from 'lucide-react';
 import { ToastContainer, useToast } from './components/Toast';
 import { SessionList } from './components/SessionList';
 import { QuickActionsBar } from './components/QuickActionsBar';
@@ -536,7 +537,7 @@ export function App() {
       {/* Header */}
       <header className="popup-header">
         <div className="flex items-center gap-sm">
-          <span className="popup-logo">📑</span>
+          <img src="/icons/icon48.png" alt="SessionKeeper" width="24" height="24" className="popup-logo" />
           <h1 className="text-heading">Session Keeper</h1>
         </div>
         <button
@@ -544,7 +545,7 @@ export function App() {
           aria-label="Settings"
           onClick={handleOpenTagPanel}
         >
-          ⚙️
+          <Tags size={18} />
         </button>
       </header>
 

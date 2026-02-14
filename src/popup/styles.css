@@ -118,7 +118,9 @@ body {
 }
 
 .popup-logo {
-  font-size: 24px;
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
 }
 
 /* Popup Main Content */
